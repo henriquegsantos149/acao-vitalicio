@@ -729,6 +729,87 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 2rem;
 }
 
+/* Testimonials Carousel Section */
+.testimonials-section {
+    padding: 6rem 0;
+    position: relative;
+    z-index: 10;
+    background-color: var(--primary-dark);
+    overflow: hidden;
+}
+
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.carousel-track-wrapper {
+    overflow: hidden;
+    width: 100%;
+    padding: 2rem 0;
+}
+
+.carousel-track {
+    display: flex;
+    align-items: center;
+    transition: transform 0.5s ease-in-out;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.carousel-slide {
+    width: 350px;
+    flex-shrink: 0;
+    margin: 0 1rem;
+    transition: all 0.5s ease-in-out;
+    opacity: 0.5;
+    filter: blur(4px);
+    transform: scale(0.8);
+    cursor: pointer;
+}
+
+.carousel-slide.active-slide {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1.1);
+    z-index: 5;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+.carousel-slide:hover:not(.active-slide) {
+    transform: scale(0.9);
+    opacity: 0.8;
+    filter: blur(2px);
+}
+
+.carousel-slide img {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 10px 20px rgba(111, 176, 58, 0.2);
+}
+
+.carousel-btn {
+    background: transparent;
+    border: none;
+    color: var(--green-1);
+    font-size: 3rem;
+    cursor: pointer;
+    padding: 0 1rem;
+    transition: transform 0.3s ease;
+    z-index: 10;
+}
+
+.carousel-btn:hover {
+    transform: scale(1.2);
+    color: var(--green-2);
+}
+
 /* Responsive */
 @media (max-width: 992px) {
     .hero-content, .method-content, .instructor-content {

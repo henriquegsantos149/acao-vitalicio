@@ -87,4 +87,66 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Testimonials Carousel Logic
+    const track = document.querySelector('.carousel-track');
+    const slides = track ? Array.from(track.children) : [];
+    const nextButton = document.querySelector('.next-btn');
+    const prevButton = document.querySelector('.prev-btn');
+
+    let currentIndex = 0;
+
+    function updateCarousel() {
+        if (!track || slides.length === 0) return;
+        
+        slides.forEach((slide, index) => {
+            slide.classList.remove('active-slide');
+            if (index === currentIndex) {
+                slide.classList.add('active-slide');
+            }
+        });
+
+        // Calculate offset to center the active slide
+        const wrapper = document.querySelector('.carousel-track-wrapper');
+        const wrapperCenter = wrapper.getBoundingClientRect().width / 2;
+        
+        const activeSlide = slides[currentIndex];
+        // Calculate the center of the active slide relative to the track's left edge
+        // offsetLeft gives the position. Width is offsetWidth.
+        const activeSlideCenter = activeSlide.offsetLeft + activeSlide.offsetWidth / 2;
+        
+        const trackOffset = wrapperCenter - activeSlideCenter;
+        track.style.transform = `translateX(${trackOffset}px)`;
+    }
+
+    if (track && nextButton && prevButton && slides.length > 0) {
+        // Start in the middle
+        currentIndex = Math.floor(slides.length / 2);
+        
+        // Wait a small delay to ensure DOM layout is complete for calculation
+        setTimeout(updateCarousel, 100);
+
+        nextButton.addEventListener('click', () => {
+            if (currentIndex < slides.length - 1) {
+                currentIndex++;
+                updateCarousel();
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        slides.forEach((slide, index) => {
+            slide.addEventListener('click', () => {
+                currentIndex = index;
+                updateCarousel();
+            });
+        });
+        
+        window.addEventListener('resize', updateCarousel);
+    }
 });
