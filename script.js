@@ -95,40 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             
             const btn = captureForm.querySelector('button[type="submit"]');
-            const originalText = btn.textContent;
-            btn.textContent = 'Enviando...';
+            btn.textContent = 'Redirecionando...';
             btn.disabled = true;
 
-            const nome = document.getElementById('nome').value;
-            const email = document.getElementById('email').value;
-            const telefone = document.getElementById('telefone').value;
-            const formado = document.getElementById('formado').value;
-            const formacao = document.getElementById('formacao') ? document.getElementById('formacao').value : '';
-
-            const urlParams = new URLSearchParams();
-            urlParams.append('nome', nome);
-            urlParams.append('email', email);
-            urlParams.append('telefone', telefone);
-            urlParams.append('formado', formado);
-            urlParams.append('formacao', formacao);
-
-            fetch('https://script.google.com/macros/s/AKfycbwsGPKLt2FMLnLhGPKiWfhsMa-26CkjsFdyN_U2wEnYIUe1dqOdWyD8UcQM9oH-qwp3/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                body: urlParams
-            })
-            .then(response => {
-                // Redireciona para o formulário do Tally após sucesso
-                window.location.href = 'https://tally.so/r/81R28O';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ocorreu um erro ao enviar. Por favor, tente novamente.');
-            })
-            .finally(() => {
-                btn.textContent = originalText;
-                btn.disabled = false;
-            });
+            // Redireciona para o formulário do Tally imediatamente
+            window.location.href = 'https://tally.so/r/81R28O';
         });
     }
 

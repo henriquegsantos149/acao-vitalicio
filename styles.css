@@ -975,11 +975,19 @@ h1, h2, h3, h4, h5, h6 {
     .instructor-image {
         order: -1; /* Image first on mobile */
     }
+    
+    /* Optimized paddings */
+    .hero { padding: 8rem 0 4rem; }
+    .target-audience, .method-section, .instructor-section, 
+    .guarantee-section, .pricing-preview, .testimonials-section, .faq-section {
+        padding: 4rem 0;
+    }
 }
 
 @media (max-width: 768px) {
     .timer {
         flex-wrap: wrap;
+        gap: 10px;
     }
     
     .separator {
@@ -987,15 +995,24 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .time-block {
-        min-width: 80px;
+        min-width: 70px;
+        padding: 0.8rem;
     }
     
     .time-value {
-        font-size: 3rem;
+        font-size: 2.5rem;
     }
     
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .countdown-box {
+        padding: 2rem 1rem;
     }
     
     .guarantee-grid {
@@ -1003,6 +1020,61 @@ h1, h2, h3, h4, h5, h6 {
     }
     
     .guarantee-box {
-        padding: 2rem;
+        padding: 2rem 1.5rem;
     }
+    
+    .audience-card {
+        padding: 2.5rem 2rem;
+    }
+    
+    /* Method Section / Benefits List Grid Fix */
+    .benefits-list li {
+        grid-template-columns: 24px 1fr;
+    }
+    .benefits-list li strong {
+        grid-column: 2;
+        grid-row: 1;
+        margin-bottom: 2px;
+    }
+    .benefits-list li span {
+        grid-column: 2;
+        grid-row: 2;
+        margin-top: -5px;
+    }
+    
+    /* Pricing optimizations */
+    .price-body {
+        padding: 2rem 1.5rem;
+    }
+    .amount {
+        font-size: 3.5rem;
+    }
+    .currency {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Extreme padding reduction for small screens */
+    .hero { padding: 6rem 0 3rem; }
+    .target-audience, .method-section, .instructor-section, 
+    .guarantee-section, .pricing-preview, .testimonials-section, .faq-section {
+        padding: 3rem 0;
+    }
+    
+    .hero-title { font-size: 1.8rem; }
+    .section-title { font-size: 2rem; margin-bottom: 2rem; }
+    
+    .audience-card { padding: 1.5rem 1rem; }
+    .audience-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    
+    .instructor-image { height: 350px; }
+    .image-container { height: 300px; }
+    
+    .carousel-slide { width: 260px; }
+    .maps-slide { width: 220px; }
+    
+    .faq-question { font-size: 1rem; padding: 1rem 1.5rem; }
+    
+    .lightbox-close { right: 15px; top: 10px; }
 }
