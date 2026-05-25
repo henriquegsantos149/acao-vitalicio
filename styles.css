@@ -663,6 +663,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .main-footer .logo {
     margin-bottom: 1rem;
+    justify-content: center;
 }
 
 .main-footer p {
