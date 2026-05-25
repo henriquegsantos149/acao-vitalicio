@@ -120,12 +120,42 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header */
 .main-header {
-    padding: 1.5rem 0;
-    position: relative;
-    z-index: 10;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: rgba(1, 4, 4, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(49, 168, 168, 0.2);
+    transition: all 0.3s ease;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-cta {
+    display: inline-block;
+    background: transparent;
+    color: var(--green-1);
+    border: 1px solid var(--green-1);
+    padding: 0.5rem 1.5rem;
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-cta:hover {
+    background: var(--green-1);
+    color: var(--primary-dark);
+    box-shadow: 0 5px 15px rgba(111, 176, 58, 0.3);
 }
 
 .logo {
@@ -141,7 +171,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Hero Section */
 .hero {
-    padding: 4rem 0 4rem;
+    padding: 10rem 0 4rem;
     text-align: center;
     position: relative;
 }
