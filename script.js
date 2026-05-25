@@ -127,17 +127,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(updateCarousel, 100);
 
         nextButton.addEventListener('click', () => {
-            if (currentIndex < slides.length - 1) {
-                currentIndex++;
-                updateCarousel();
-            }
+            currentIndex = (currentIndex + 1) % slides.length;
+            updateCarousel();
         });
 
         prevButton.addEventListener('click', () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
-            }
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            updateCarousel();
         });
 
         slides.forEach((slide, index) => {
