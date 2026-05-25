@@ -75,9 +75,9 @@
                     <p class="live-date"><strong>09 DE JUNHO DE 2026 às 20h00</strong></p>
                     
                     <!-- Formulário de Captação -->
-                    <form class="lead-form" id="capture-form" onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');">
+                    <form class="lead-form" id="capture-form">
                         <input type="text" id="nome" placeholder="Nome Completo" required class="brand-shape-input">
-                        <input type="email" id="email" placeholder="Melhor E-mail" required class="brand-shape-input">
+                        <input type="email" id="email" placeholder="E-mail" required class="brand-shape-input">
                         <input type="tel" id="telefone" placeholder="WhatsApp / Telefone" required class="brand-shape-input">
                         
                         <select id="formado" required class="brand-shape-input">
@@ -130,17 +130,49 @@
     <!-- Context & Method Section -->
     <section class="method-section">
         <div class="container method-content">
-            <div class="image-content brand-shape image-container">
-                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Geoprocessamento e Mapas" />
-                <div class="overlay-gradient"></div>
+            <div class="maps-carousel-wrapper">
+                <div class="carousel-container" data-carousel="maps">
+                    <button class="carousel-btn prev-btn" style="position: absolute; left: -20px;">❮</button>
+                    <div class="carousel-track-wrapper" style="border-radius: var(--brand-radius);">
+                        <ul class="carousel-track">
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Analítico - Iria Ferreira da Cunha.png" alt="Mapa 1"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Analítico - Luan Felipe.png" alt="Mapa 2"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Analítico - Micael Vasconcelos.png" alt="Mapa 3"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Analítico - Raíssa Oliveira.png" alt="Mapa 4"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Analítico - Tatiana Pinheiro.png" alt="Mapa 5"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Artístico - Adriano da Costa Silva.png" alt="Mapa 6"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Artístico - Guilherme V. Chiachio.png" alt="Mapa 7"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Artístico - Luan Felipe.png" alt="Mapa 8"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Artístico - Luara Abreu.png" alt="Mapa 9"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Artístico 2 - Luan Felipe.png" alt="Mapa 10"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Temático - Kauan Ferreira.png" alt="Mapa 11"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Temático - Larissa Augusto Vieira.png" alt="Mapa 12"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Temático - Luan Felipe.png" alt="Mapa 13"></li>
+                            <li class="carousel-slide maps-slide"><img src="Public/mapas/Mapa Temático - Rodrigo Guimarães.png" alt="Mapa 14"></li>
+                        </ul>
+                    </div>
+                    <button class="carousel-btn next-btn" style="position: absolute; right: -20px;">❯</button>
+                </div>
             </div>
             <div class="text-content">
-                <h2>Elaborar mapas profissionais mudou minha vida. <br><span class="highlight-box">Pode mudar a sua também.</span></h2>
+                <h2>Elaborar mapas profissionais mudou a vida de muitos alunos. <br><span class="highlight-box">Pode mudar a sua também.</span></h2>
                 <p>Nossa metodologia foca na aplicação da tecnologia para a resolução de problemas reais. Com o PAP, você deixará a insegurança técnica para trás.</p>
                 <ul class="benefits-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <strong>Certificado pelo MEC:</strong> Curso de Extensão Universitária com 200h.</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <strong>Metodologia TPRO:</strong> Tecnologia, Prática, Resultado e Orientação.</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <strong>Acesso Vitalício:</strong> Você nunca mais vai pagar por atualizações.</li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                        <strong>Certificado pelo MEC:</strong>
+                        <span>Curso de Extensão Universitária com 200h.</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                        <strong>Metodologia TPRO:</strong>
+                        <span>Tecnologia, Prática, Resultado e Orientação.</span>
+                    </li>
+                    <li>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+                        <strong>Acesso Vitalício:</strong>
+                        <span>Você nunca mais vai pagar por atualizações.</span>
+                    </li>
                 </ul>
                 <br>
                 <a href="#countdown" class="cta-button primary-btn" style="padding: 0.8rem 1.5rem; font-size: 1rem;">GARANTIR MINHA VAGA NA LIVE</a>
@@ -306,6 +338,13 @@
         </div>
     </footer>
 
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="lightbox-modal">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+    <!-- Scripts -->
     <script src="script.js"></script>
 </body>
 </html>

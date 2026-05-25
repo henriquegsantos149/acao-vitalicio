@@ -494,11 +494,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .benefits-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: 24px 180px 1fr;
+    align-items: start;
+    gap: 12px;
     font-size: 1.125rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .benefits-list svg {
@@ -781,11 +782,7 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 15px 35px rgba(0,0,0,0.5);
 }
 
-.carousel-slide.active-slide:hover {
-    transform: scale(1.5);
-    z-index: 20;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-}
+
 
 
 
@@ -810,6 +807,18 @@ h1, h2, h3, h4, h5, h6 {
 .carousel-btn:hover {
     transform: scale(1.2);
     color: var(--green-2);
+}
+
+/* Maps Carousel Specific Styles */
+.maps-carousel-wrapper {
+    width: 100%;
+    position: relative;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.maps-slide {
+    width: 250px;
 }
 
 /* FAQ Section */
@@ -890,6 +899,59 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0;
     color: #444 !important;
     line-height: 1.6;
+}
+
+/* Lightbox Styles */
+.lightbox-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    transform: scale(0.8);
+    transition: transform 0.3s ease;
+}
+
+.lightbox-modal.show .lightbox-content {
+    transform: scale(1);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 10000;
+}
+
+.lightbox-close:hover,
+.lightbox-close:focus {
+    color: var(--green-1);
+    text-decoration: none;
+    cursor: pointer;
 }
 
 /* Responsive */
