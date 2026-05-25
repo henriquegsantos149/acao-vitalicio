@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Vitalício PAP - Ambiental Pro</title>
+    <meta name="description" content="Participe da Live de Revelação do Acesso Vitalício ao PAP. A sua capacitação definitiva em geoprocessamento, para a vida toda.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Outfit (Primary), Montserrat (Secondary), Bebas Neue (Countdown) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Background Effects -->
+    <div class="grid-background"></div>
+    <div class="glow-effect top-left"></div>
+    <div class="glow-effect bottom-right"></div>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-highlight">AMBIENTAL</span> PRO
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="badge">O FIM DAS ASSINATURAS</div>
+            <h1 class="hero-title">
+                O SEU ACESSO <span class="gradient-text">VITALÍCIO</span> AO PAP
+            </h1>
+            <p class="hero-subtitle">
+                A formação mais completa do mundo em Geoprocessamento, Sensoriamento Remoto e elaboração de mapas técnicos profissionais. <strong>Agora, seu acesso é para a vida toda.</strong>
+            </p>
+            
+            <a href="#countdown" class="cta-button primary-btn">
+                <span>QUERO GARANTIR MINHA VAGA NA LIVE</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <p class="sub-cta">Evento Ao Vivo • Vagas e Bônus Limitados</p>
+        </div>
+    </section>
+
+    <!-- Countdown Section -->
+    <section id="countdown" class="countdown-section">
+        <div class="container">
+            <div class="countdown-box brand-shape">
+                <h2 class="countdown-title">A AULA MAGNA COMEÇA EM:</h2>
+                <div class="timer" id="timer">
+                    <div class="time-block">
+                        <span class="time-value" id="days">00</span>
+                        <span class="time-label">Dias</span>
+                    </div>
+                    <span class="separator">:</span>
+                    <div class="time-block">
+                        <span class="time-value" id="hours">00</span>
+                        <span class="time-label">Horas</span>
+                    </div>
+                    <span class="separator">:</span>
+                    <div class="time-block">
+                        <span class="time-value" id="minutes">00</span>
+                        <span class="time-label">Min</span>
+                    </div>
+                    <span class="separator">:</span>
+                    <div class="time-block">
+                        <span class="time-value" id="seconds">00</span>
+                        <span class="time-label">Seg</span>
+                    </div>
+                </div>
+                <p class="live-date"><strong>09 DE JUNHO DE 2026 às 20h00</strong></p>
+                
+                <!-- Formulário de Captação -->
+                <form class="lead-form" id="capture-form" onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');">
+                    <input type="text" id="nome" placeholder="Nome Completo" required class="brand-shape-input">
+                    <input type="email" id="email" placeholder="Melhor E-mail" required class="brand-shape-input">
+                    <input type="tel" id="telefone" placeholder="WhatsApp / Telefone" required class="brand-shape-input">
+                    
+                    <select id="formado" required class="brand-shape-input">
+                        <option value="" disabled selected>Você já é formado(a)?</option>
+                        <option value="sim">Sim</option>
+                        <option value="nao">Não</option>
+                    </select>
+
+                    <div id="formacao-container" style="display: none; width: 100%;">
+                        <input type="text" id="formacao" placeholder="Qual a sua formação?" class="brand-shape-input">
+                    </div>
+
+                    <button type="submit" class="cta-button secondary-btn brand-shape">INSCREVER-SE GRATUITAMENTE</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Para Quem É Section -->
+    <section class="target-audience">
+        <div class="container">
+            <h2 class="section-title">Para quem é o PAP Vitalício?</h2>
+            <div class="audience-grid">
+                <div class="audience-card brand-shape">
+                    <div class="audience-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                    </div>
+                    <h3>Profissionais da Área Ambiental</h3>
+                    <p>Que querem se sentir seguros e confiantes com as demandas reais do mercado de trabalho, entregando análises e mapas irretocáveis.</p>
+                </div>
+                <div class="audience-card brand-shape">
+                    <div class="audience-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+                    </div>
+                    <h3>Estudantes (Graduação e Pós)</h3>
+                    <p>Que desejam ser convidados para artigos, pesquisas e garantir bolsas de estudo devido ao amplo conhecimento prático em Geoprocessamento.</p>
+                </div>
+                <div class="audience-card brand-shape">
+                    <div class="audience-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>
+                    </div>
+                    <h3>Analistas e Consultores</h3>
+                    <p>Que buscam ser valorizados e melhorar seus salários tomando decisões assertivas baseadas na análise de dados geográficos impactantes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Context & Method Section -->
+    <section class="method-section">
+        <div class="container method-content">
+            <div class="image-content brand-shape image-container">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Geoprocessamento e Mapas" />
+                <div class="overlay-gradient"></div>
+            </div>
+            <div class="text-content">
+                <h2>Elaborar mapas profissionais mudou minha vida. <br><span class="highlight-box">Pode mudar a sua também.</span></h2>
+                <p>Nossa metodologia foca na aplicação da tecnologia para a resolução de problemas reais. Com o PAP, você deixará a insegurança técnica para trás.</p>
+                <ul class="benefits-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <strong>Certificado pelo MEC:</strong> Curso de Extensão Universitária com 200h.</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <strong>Metodologia TPRO:</strong> Tecnologia, Prática, Resultado e Orientação.</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <strong>Acesso Vitalício:</strong> Você nunca mais vai pagar por atualizações.</li>
+                </ul>
+                <br>
+                <a href="#countdown" class="cta-button primary-btn" style="padding: 0.8rem 1.5rem; font-size: 1rem;">GARANTIR MINHA VAGA NA LIVE</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instructor Section -->
+    <section class="instructor-section">
+        <div class="container instructor-content">
+            <div class="text-content">
+                <h2>Quem será o seu mentor?</h2>
+                <h3 class="instructor-name">Henrique Gonzalez</h3>
+                <p>Engenheiro Ambiental formado pela UFRJ e Especialista em Geotecnologias pelo IPOG. Henrique já treinou <strong>mais de 80 mil pessoas</strong> em diversos países.</p>
+                <p>Fundou a Ambiental Pro em 2019 com a missão de capacitar profissionais para suprir as demandas do mercado por meio de tecnologia e inovação, sem enrolação e focado na prática real exigida pelas grandes consultorias.</p>
+            </div>
+            <div class="instructor-image brand-shape">
+                <img src="public/foto-henrique.jpg" alt="Henrique Gonzalez" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Guarantee Section -->
+    <section class="guarantee-section">
+        <div class="container">
+            <div class="guarantee-box brand-shape">
+                <div class="guarantee-icon">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <h2>Garantia Dupla e Sem Riscos</h2>
+                <div class="guarantee-grid">
+                    <div class="g-item">
+                        <h3>15 Dias Incondicional</h3>
+                        <p>Teste o Programa Ambiental Pro por duas semanas. Se achar que não é para você, devolvemos 100% do seu dinheiro. Simples assim.</p>
+                    </div>
+                    <div class="g-item">
+                        <h3>Garantia Condicional + R$1.000</h3>
+                        <p>Se você assistir às aulas, aplicar a metodologia, montar seu portfólio e não tiver resultados, nós devolvemos o seu investimento E MAIS R$ 1.000 do nosso próprio bolso.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section (Preview da Oferta da Live) -->
+    <section class="pricing-preview">
+        <div class="container">
+            <h2 class="section-title">O que será revelado na Live?</h2>
+            <p class="pricing-subtitle">Acesso aos módulos práticos, gravação das lives, certificados MEC, comunidade exclusiva e TODOS os bônus futuros.</p>
+            
+            <div class="price-card brand-shape">
+                <div class="price-header">
+                    <h3>OFERTA VITALÍCIA (LOTE ÚNICO)</h3>
+                    <div class="badge">Apenas durante a Live</div>
+                </div>
+                <div class="price-body">
+                    <p class="old-price">Valor total dos itens: <del>R$ 7.926,00</del></p>
+                    <p class="new-price-label">Sua condição especial será de:</p>
+                    <div class="price">
+                        <span class="currency">12x R$</span>
+                        <span class="amount">197</span>
+                        <span class="cents">,70</span>
+                    </div>
+                    <p class="discount-note">Exclusivo para quem estiver ao vivo. Alunos antigos terão um desconto ainda maior!</p>
+                    
+                    <div class="special-bonus">
+                        <strong><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green-1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 4px;"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg> BÔNUS DE AÇÃO RÁPIDA:</strong><br>
+                        Para quem comprar até às 23h59 do dia da live, ganhará o <strong>Passaporte Ouro 2026</strong> (acesso a gravações de congressos e ingressos VIP online).
+                    </div>
+                </div>
+                <div class="price-footer">
+                    <a href="#countdown" class="cta-button primary-btn">CADASTRAR PARA RECEBER O LINK</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-highlight">AMBIENTAL</span> PRO
+            </div>
+            <p>O PAP é a capacitação definitiva em geoprocessamento. Não perca a oportunidade de garantir seu acesso vitalício.</p>
+            <p class="copyright">&copy; 2026 Ambiental Pro. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
