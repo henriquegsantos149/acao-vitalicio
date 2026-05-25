@@ -144,7 +144,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-light .instructor-name {
-    color: var(--teal-blue);
+    color: var(--green-1);
 }
 
 .bg-light .price-card {
@@ -553,7 +553,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .instructor-name {
     font-size: 2rem;
-    color: var(--teal-blue);
+    color: var(--green-1);
     margin-bottom: 1.5rem;
 }
 
