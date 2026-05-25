@@ -787,11 +787,7 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 30px 60px rgba(0,0,0,0.8);
 }
 
-.carousel-slide:hover:not(.active-slide) {
-    transform: scale(0.9);
-    opacity: 0.8;
-    filter: blur(2px);
-}
+
 
 .carousel-slide img {
     width: 100%;
