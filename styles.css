@@ -231,11 +231,12 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-content {
-    max-width: 800px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
     align-items: center;
+    text-align: left;
+    margin: 0 auto;
 }
 
 .badge {
@@ -253,7 +254,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .hero-title {
-    font-size: 4rem;
+    font-size: 3rem;
     font-weight: 800;
     text-transform: uppercase;
     margin-bottom: 1.5rem;
@@ -725,8 +726,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Responsive */
 @media (max-width: 992px) {
-    .method-content, .instructor-content {
+    .hero-content, .method-content, .instructor-content {
         grid-template-columns: 1fr;
+    }
+    
+    .hero-content {
+        text-align: center;
     }
     
     .hero-title {

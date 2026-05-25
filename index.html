@@ -29,76 +29,70 @@
                 <img src="Public/logo.png" alt="Ambiental Pro Logo" style="max-height: 28px;">
             </div>
             <nav class="nav-links">
-                <a href="#countdown" class="nav-cta brand-shape">GARANTIR VAGA</a>
+                <a href="#capture-form-section" class="nav-cta brand-shape">GARANTIR VAGA</a>
             </nav>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="hero">
         <div class="container hero-content">
-            <div class="badge">O FIM DAS ASSINATURAS</div>
-            <h1 class="hero-title">
-                O SEU ACESSO <span class="gradient-text">VITALÍCIO</span> AO PAP
-            </h1>
-            <p class="hero-subtitle">
-                A formação mais completa do mundo em Geoprocessamento, Sensoriamento Remoto e elaboração de mapas técnicos profissionais. <strong>Agora, seu acesso é para a vida toda.</strong>
-            </p>
+            <div class="hero-text-side">
+                <div class="badge">O FIM DAS ASSINATURAS</div>
+                <h1 class="hero-title">
+                    O SEU ACESSO <span class="gradient-text">VITALÍCIO</span> AO PAP
+                </h1>
+                <p class="hero-subtitle">
+                    A formação mais completa do mundo em Geoprocessamento, Sensoriamento Remoto e elaboração de mapas técnicos profissionais. <strong>Agora, seu acesso é para a vida toda.</strong>
+                </p>
+                <p class="sub-cta" style="margin-top: 2rem;">Evento Ao Vivo • Vagas e Bônus Limitados</p>
+            </div>
             
-            <a href="#countdown" class="cta-button primary-btn">
-                <span>QUERO GARANTIR MINHA VAGA NA LIVE</span>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
-            <p class="sub-cta">Evento Ao Vivo • Vagas e Bônus Limitados</p>
-        </div>
-    </section>
-
-    <!-- Countdown Section -->
-    <section id="countdown" class="countdown-section">
-        <div class="container">
-            <div class="countdown-box brand-shape">
-                <h2 class="countdown-title">A AULA MAGNA COMEÇA EM:</h2>
-                <div class="timer" id="timer">
-                    <div class="time-block">
-                        <span class="time-value" id="days">00</span>
-                        <span class="time-label">Dias</span>
+            <div class="hero-form-side">
+                <div class="countdown-box brand-shape" id="capture-form-section" style="padding: 2.5rem 2rem;">
+                    <h2 class="countdown-title" style="font-size: 1.25rem;">A AULA MAGNA COMEÇA EM:</h2>
+                    <div class="timer" id="timer">
+                        <div class="time-block">
+                            <span class="time-value" id="days" style="font-size: 2.5rem;">00</span>
+                            <span class="time-label" style="font-size: 0.75rem;">Dias</span>
+                        </div>
+                        <span class="separator" style="font-size: 2rem;">:</span>
+                        <div class="time-block">
+                            <span class="time-value" id="hours" style="font-size: 2.5rem;">00</span>
+                            <span class="time-label" style="font-size: 0.75rem;">Horas</span>
+                        </div>
+                        <span class="separator" style="font-size: 2rem;">:</span>
+                        <div class="time-block">
+                            <span class="time-value" id="minutes" style="font-size: 2.5rem;">00</span>
+                            <span class="time-label" style="font-size: 0.75rem;">Min</span>
+                        </div>
+                        <span class="separator" style="font-size: 2rem;">:</span>
+                        <div class="time-block">
+                            <span class="time-value" id="seconds" style="font-size: 2.5rem;">00</span>
+                            <span class="time-label" style="font-size: 0.75rem;">Seg</span>
+                        </div>
                     </div>
-                    <span class="separator">:</span>
-                    <div class="time-block">
-                        <span class="time-value" id="hours">00</span>
-                        <span class="time-label">Horas</span>
-                    </div>
-                    <span class="separator">:</span>
-                    <div class="time-block">
-                        <span class="time-value" id="minutes">00</span>
-                        <span class="time-label">Min</span>
-                    </div>
-                    <span class="separator">:</span>
-                    <div class="time-block">
-                        <span class="time-value" id="seconds">00</span>
-                        <span class="time-label">Seg</span>
-                    </div>
-                </div>
-                <p class="live-date"><strong>09 DE JUNHO DE 2026 às 20h00</strong></p>
-                
-                <!-- Formulário de Captação -->
-                <form class="lead-form" id="capture-form" onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');">
-                    <input type="text" id="nome" placeholder="Nome Completo" required class="brand-shape-input">
-                    <input type="email" id="email" placeholder="Melhor E-mail" required class="brand-shape-input">
-                    <input type="tel" id="telefone" placeholder="WhatsApp / Telefone" required class="brand-shape-input">
+                    <p class="live-date"><strong>09 DE JUNHO DE 2026 às 20h00</strong></p>
                     
-                    <select id="formado" required class="brand-shape-input">
-                        <option value="" disabled selected>Você já é formado(a)?</option>
-                        <option value="sim">Sim</option>
-                        <option value="nao">Não</option>
-                    </select>
+                    <!-- Formulário de Captação -->
+                    <form class="lead-form" id="capture-form" onsubmit="event.preventDefault(); alert('Inscrição realizada com sucesso!');">
+                        <input type="text" id="nome" placeholder="Nome Completo" required class="brand-shape-input">
+                        <input type="email" id="email" placeholder="Melhor E-mail" required class="brand-shape-input">
+                        <input type="tel" id="telefone" placeholder="WhatsApp / Telefone" required class="brand-shape-input">
+                        
+                        <select id="formado" required class="brand-shape-input">
+                            <option value="" disabled selected>Você já é formado(a)?</option>
+                            <option value="sim">Sim</option>
+                            <option value="nao">Não</option>
+                        </select>
 
-                    <div id="formacao-container" style="display: none; width: 100%;">
-                        <input type="text" id="formacao" placeholder="Qual a sua formação?" class="brand-shape-input">
-                    </div>
+                        <div id="formacao-container" style="display: none; width: 100%;">
+                            <input type="text" id="formacao" placeholder="Qual a sua formação?" class="brand-shape-input">
+                        </div>
 
-                    <button type="submit" class="cta-button secondary-btn brand-shape">INSCREVER-SE GRATUITAMENTE</button>
-                </form>
+                        <button type="submit" class="cta-button secondary-btn brand-shape">INSCREVER-SE GRATUITAMENTE</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
@@ -218,7 +212,7 @@
                     </div>
                 </div>
                 <div class="price-footer">
-                    <a href="#countdown" class="cta-button primary-btn">CADASTRAR PARA RECEBER O LINK</a>
+                    <a href="#capture-form-section" class="cta-button primary-btn">CADASTRAR PARA RECEBER O LINK</a>
                 </div>
             </div>
         </div>
