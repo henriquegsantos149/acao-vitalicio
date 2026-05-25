@@ -120,9 +120,12 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header */
 .main-header {
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     position: relative;
     z-index: 10;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo {
