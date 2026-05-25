@@ -819,6 +819,28 @@ h1, h2, h3, h4, h5, h6 {
 
 .maps-slide {
     width: 250px;
+    position: relative;
+}
+
+.map-caption {
+    margin-top: 15px;
+    text-align: center;
+    color: var(--light-gray);
+    font-size: 0.9rem;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    transform: translateY(10px);
+}
+
+.carousel-slide.active-slide .map-caption {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.map-caption strong {
+    color: var(--green-1);
+    font-size: 1rem;
 }
 
 /* FAQ Section */
