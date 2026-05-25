@@ -118,6 +118,53 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: var(--brand-radius) !important;
 }
 
+/* Light Mode Sections */
+.bg-light {
+    background-color: var(--light-gray) !important;
+    color: var(--primary-dark) !important;
+}
+
+.bg-light h1, .bg-light h2, .bg-light h3, .bg-light h4, .bg-light h5, .bg-light h6 {
+    color: var(--primary-dark) !important;
+}
+
+.bg-light p, .bg-light .pricing-subtitle, .bg-light .old-price, .bg-light .audience-card p {
+    color: #333333 !important;
+}
+
+.bg-light .audience-card {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.bg-light .audience-card:hover {
+    background: #f8fbf8;
+    border-color: var(--green-1);
+}
+
+.bg-light .instructor-name {
+    color: var(--teal-blue);
+}
+
+.bg-light .price-card {
+    background: #ffffff;
+    border: 2px solid var(--teal-blue);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.bg-light .price {
+    color: var(--primary-dark);
+}
+
+.bg-light .special-bonus {
+    color: #111;
+}
+
+.bg-light .discount-note {
+    color: #444;
+}
+
 /* Header */
 .main-header {
     padding: 1rem 0;
@@ -487,7 +534,6 @@ h1, h2, h3, h4, h5, h6 {
 /* Instructor Section */
 .instructor-section {
     padding: 6rem 0;
-    background: rgba(255,255,255,0.02);
     position: relative;
     z-index: 10;
 }
