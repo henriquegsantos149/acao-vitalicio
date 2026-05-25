@@ -417,6 +417,11 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(255,255,255,0.1);
 }
 
+.brand-shape-input option {
+    background-color: var(--primary-dark);
+    color: var(--light-gray);
+}
+
 /* Audience Section */
 .target-audience {
     padding: 4rem 0;
