@@ -424,7 +424,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Audience Section */
 .target-audience {
-    padding: 4rem 0;
+    padding: 8rem 0;
     position: relative;
     z-index: 10;
 }
@@ -438,7 +438,7 @@ h1, h2, h3, h4, h5, h6 {
 .audience-card {
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.05);
-    padding: 2.5rem 2rem;
+    padding: 4rem 3rem;
     transition: all 0.3s ease;
 }
 
