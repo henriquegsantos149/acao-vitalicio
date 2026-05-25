@@ -159,10 +159,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo {
+    display: flex;
+    align-items: center;
     font-family: var(--font-primary);
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: 2px;
+}
+
+.logo img {
+    display: block;
+    transition: transform 0.3s ease;
 }
 
 .logo-highlight {
