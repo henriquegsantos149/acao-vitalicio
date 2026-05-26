@@ -383,6 +383,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const utmContentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
             const utmTermVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
 
+            // Record start time to ensure tracking has time to fire before redirect
+            const submitStartTime = Date.now();
+
             // 1. Meta Pixel Lead Tracking
             try {
                 if (typeof fbq === 'function') {
@@ -449,9 +452,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const finalRedirectUrl = `${TALLY_REDIRECT}?${queryParams.toString()}`;
 
-            // Always redirect to Tally after attempting AC sync
-            btn.textContent = 'Redirecionando...';
-            window.location.href = finalRedirectUrl;
+            // Calculate elapsed time and enforce a minimum delay of 1200ms to allow tracking events to fire completely
+            const elapsed = Date.now() - submitStartTime;
+            const remainingDelay = Math.max(0, 1200 - elapsed);
+
+            setTimeout(() => {
+                btn.textContent = 'Redirecionando...';
+                window.location.href = finalRedirectUrl;
+            }, remainingDelay);
         });
     }
 
