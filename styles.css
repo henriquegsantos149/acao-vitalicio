@@ -556,14 +556,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .instructor-name {
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: var(--green-1);
     margin-bottom: 1.5rem;
 }
 
+.instructor-content .text-content p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #a0a4a0;
+    margin-bottom: 1.2rem;
+}
+
 .instructor-image {
     width: 100%;
-    height: 550px;
+    height: 680px;
     overflow: hidden;
     border: 2px solid rgba(49, 168, 168, 0.3);
 }
@@ -1159,7 +1166,7 @@ h1, h2, h3, h4, h5, h6 {
     .audience-card { padding: 1.5rem 1rem; }
     .audience-icon { font-size: 2.5rem; margin-bottom: 1rem; }
     
-    .instructor-image { height: 350px; }
+    .instructor-image { height: 420px; }
     .image-container { height: 300px; }
     
     .carousel-slide { width: 260px; }
