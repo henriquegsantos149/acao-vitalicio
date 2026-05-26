@@ -453,25 +453,55 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Build Tally redirection URL passing the UTM values
+            // Build Tally redirection URL passing the UTM values (various cases to match Tally hidden fields)
             const queryParams = new URLSearchParams();
+            
+            // Uppercase Custom UTMs
             if (utmSourceVal) queryParams.set('L01ACAODEVITALICIO_UTM_SOURCE', utmSourceVal);
             if (utmMediumVal) queryParams.set('L01ACAODEVITALICIO_UTM_MEDIUM', utmMediumVal);
             if (utmCampaignVal) queryParams.set('L01ACAODEVITALICIO_UTM_CAMPAIGN', utmCampaignVal);
             if (utmContentVal) queryParams.set('L01ACAODEVITALICIO_UTM_CONTENT', utmContentVal);
             if (utmTermVal) queryParams.set('L01ACAODEVITALICIO_UTM_TERM', utmTermVal);
 
-            // Also send standard UTMs as fallback
+            // Lowercase Custom UTMs
+            if (utmSourceVal) queryParams.set('l01acaodevitalicio_utm_source', utmSourceVal);
+            if (utmMediumVal) queryParams.set('l01acaodevitalicio_utm_medium', utmMediumVal);
+            if (utmCampaignVal) queryParams.set('l01acaodevitalicio_utm_campaign', utmCampaignVal);
+            if (utmContentVal) queryParams.set('l01acaodevitalicio_utm_content', utmContentVal);
+            if (utmTermVal) queryParams.set('l01acaodevitalicio_utm_term', utmTermVal);
+
+            // Standard UTMs
             if (utmSourceVal) queryParams.set('utm_source', utmSourceVal);
             if (utmMediumVal) queryParams.set('utm_medium', utmMediumVal);
             if (utmCampaignVal) queryParams.set('utm_campaign', utmCampaignVal);
             if (utmContentVal) queryParams.set('utm_content', utmContentVal);
             if (utmTermVal) queryParams.set('utm_term', utmTermVal);
 
-            // Populate form fields to prevent duplicate input
+            // Prefilled Lead Fields (multiple variations to match Tally hidden fields/labels)
             queryParams.set('nome', nome);
+            queryParams.set('Nome', nome);
+            queryParams.set('name', nome);
+            queryParams.set('Name', nome);
+
             queryParams.set('email', email);
+            queryParams.set('Email', email);
+            queryParams.set('e-mail', email);
+            queryParams.set('E-mail', email);
+
             queryParams.set('telefone', telefone);
-            if (formacao) queryParams.set('formacao', formacao);
+            queryParams.set('Telefone', telefone);
+            queryParams.set('whatsapp', telefone);
+            queryParams.set('Whatsapp', telefone);
+            queryParams.set('WhatsApp', telefone);
+            queryParams.set('phone', telefone);
+            queryParams.set('Phone', telefone);
+
+            if (formacao) {
+                queryParams.set('formacao', formacao);
+                queryParams.set('Formacao', formacao);
+                queryParams.set('formação', formacao);
+                queryParams.set('Formação', formacao);
+            }
 
             const finalRedirectUrl = `${TALLY_REDIRECT}?${queryParams.toString()}`;
 
