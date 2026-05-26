@@ -116,31 +116,10 @@
                     <p class="live-date"><strong>09 DE JUNHO DE 2026 às 20h00</strong></p>
                     
                     <!-- Formulário de Captação -->
-                    <form class="lead-form" id="capture-form" method="POST" action="https://ambientalpro.activehosted.com/proc.php" target="ac_post_iframe">
-                        <!-- Campos ocultos de configuração do ActiveCampaign -->
-                        <input type="hidden" name="u" value="1">
-                        <input type="hidden" name="f" value="19" id="ac_form_id"> <!-- Substitua o '19' pelo ID do formulário criado no painel se necessário -->
-                        <input type="hidden" name="s" value="">
-                        <input type="hidden" name="c" value="0">
-                        <input type="hidden" name="m" value="0">
-                        <input type="hidden" name="act" value="sub">
-                        <input type="hidden" name="v" value="2">
-                        <input type="hidden" name="or" value="">
-
-                        <!-- Campos ocultos de UTM e Rastreamento -->
-                        <input type="hidden" name="field[755]" id="ac_utm_source" value="">
-                        <input type="hidden" name="field[756]" id="ac_utm_campaign" value="">
-                        <input type="hidden" name="field[757]" id="ac_utm_medium" value="">
-                        <input type="hidden" name="field[758]" id="ac_utm_term" value="">
-                        <input type="hidden" name="field[759]" id="ac_utm_content" value="">
-                        <input type="hidden" name="field[760]" id="ac_data_inscricao" value="">
-                        <input type="hidden" name="field[761]" id="ac_possui_graduacao" value="">
-                        <input type="hidden" name="field[762]" id="ac_area_formacao" value="">
-
-                        <!-- Campos visíveis do formulário -->
-                        <input type="text" id="nome" name="fullname" placeholder="Nome Completo" required class="brand-shape-input">
-                        <input type="email" id="email" name="email" placeholder="E-mail" required class="brand-shape-input">
-                        <input type="tel" id="telefone" name="phone" placeholder="WhatsApp / Telefone" required class="brand-shape-input">
+                    <form class="lead-form" id="capture-form">
+                        <input type="text" id="nome" placeholder="Nome Completo" required class="brand-shape-input">
+                        <input type="email" id="email" placeholder="E-mail" required class="brand-shape-input">
+                        <input type="tel" id="telefone" placeholder="WhatsApp / Telefone" required class="brand-shape-input">
                         
                         <select id="formado" required class="brand-shape-input">
                             <option value="" disabled selected>Você já é formado(a)?</option>
@@ -437,9 +416,6 @@
             <button class="ementa-btn next-btn">&#10095;</button>
         </div>
     </div>
-
-    <!-- Hidden Iframe for Direct ActiveCampaign Submission -->
-    <iframe name="ac_post_iframe" id="ac_post_iframe" style="display:none;"></iframe>
 
     <!-- Scripts -->
     <script type="module" src="./main.js"></script>

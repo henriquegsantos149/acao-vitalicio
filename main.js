@@ -245,10 +245,28 @@ document.addEventListener('DOMContentLoaded', () => {
         return utms;
     }
 
+    // Helper function to perform fetch with a timeout
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 3000 } = options; // Default 3 seconds timeout
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        try {
+            const response = await fetch(resource, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(id);
+            return response;
+        } catch (error) {
+            clearTimeout(id);
+            throw error;
+        }
+    }
+
     // Form Submission Logic
     const captureForm = document.getElementById('capture-form');
     if (captureForm) {
-        captureForm.addEventListener('submit', function(e) {
+        captureForm.addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const btn = captureForm.querySelector('button[type="submit"]');
@@ -301,24 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const utmContentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
             const utmTermVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
 
-            // Fill hidden UTM fields in HTML Form
-            document.getElementById('ac_utm_source').value = utmSourceVal;
-            document.getElementById('ac_utm_campaign').value = utmCampaignVal;
-            document.getElementById('ac_utm_medium').value = utmMediumVal;
-            document.getElementById('ac_utm_term').value = utmTermVal;
-            document.getElementById('ac_utm_content').value = utmContentVal;
-
-            // Set Formatação fields
-            const formadoNormalized = formado === 'sim' ? 'Sim' : (formado === 'nao' ? 'Não' : formado);
-            document.getElementById('ac_possui_graduacao').value = formadoNormalized;
-            document.getElementById('ac_area_formacao').value = formacao;
-
-            // Registration Date: formatted in Brasilia time (GMT-3)
-            const now = new Date();
-            const offsetMs = -3 * 60 * 60 * 1000;
-            const localTime = new Date(now.getTime() + offsetMs);
-            const formattedDate = localTime.toISOString().slice(0, 19).replace('T', ' ');
-            document.getElementById('ac_data_inscricao').value = formattedDate;
+            const submitStartTime = Date.now();
 
             // 1. Meta Pixel Lead Tracking
             try {
@@ -348,18 +349,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('GTM Lead event error:', gtmErr);
             }
 
-            // 3. Direct HTML Form Submit to Hidden Iframe (ActiveCampaign proc.php)
+            // 3. Send lead data to local serverless API route securely
             try {
-                captureForm.submit();
-            } catch (submitErr) {
-                console.error('Direct AC submit error:', submitErr);
+                const apiRes = await fetchWithTimeout('/api/activecampaign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, telefone, utms, formado, formacao }),
+                    timeout: 5000
+                });
+                if (!apiRes.ok) {
+                    console.error('Failed to sync via API route:', await apiRes.text());
+                }
+            } catch (err) {
+                console.error('ActiveCampaign sync error:', err);
             }
 
-            // Wait 1500ms to allow submission to finish inside the hidden iframe, then redirect to Tally
+            // Wait until remaining delay is complete (enforcing a minimum of 1200ms) then redirect to Tally
+            const elapsed = Date.now() - submitStartTime;
+            const remainingDelay = Math.max(0, 1200 - elapsed);
+
             setTimeout(() => {
                 btn.textContent = 'Redirecionando...';
                 window.location.href = TALLY_REDIRECT;
-            }, 1500);
+            }, remainingDelay);
         });
     }
 
