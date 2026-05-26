@@ -245,30 +245,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return utms;
     }
 
-    // Helper function to perform fetch with a timeout
-    async function fetchWithTimeout(resource, options = {}) {
-        const { timeout = 3000 } = options; // Default 3 seconds timeout
-        const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), timeout);
-        try {
-            const response = await fetch(resource, {
-                ...options,
-                signal: controller.signal
-            });
-            clearTimeout(id);
-            return response;
-        } catch (error) {
-            clearTimeout(id);
-            throw error;
-        }
-    }
-
-
-
     // Form Submission Logic
     const captureForm = document.getElementById('capture-form');
     if (captureForm) {
-        captureForm.addEventListener('submit', async function(e) {
+        captureForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
             const btn = captureForm.querySelector('button[type="submit"]');
@@ -312,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Merge URL UTMs with persisted session UTMs
+            // Capture UTMs
             const utms = { ...getPersistedUTMs(), ...getUTMParams() };
 
             const utmSourceVal = utms['L01ACAODEVITALICIO_UTM_SOURCE'] || utms['utm_source'] || '';
@@ -321,8 +301,24 @@ document.addEventListener('DOMContentLoaded', () => {
             const utmContentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
             const utmTermVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
 
-            // Record start time to ensure tracking has time to fire before redirect
-            const submitStartTime = Date.now();
+            // Fill hidden UTM fields in HTML Form
+            document.getElementById('ac_utm_source').value = utmSourceVal;
+            document.getElementById('ac_utm_campaign').value = utmCampaignVal;
+            document.getElementById('ac_utm_medium').value = utmMediumVal;
+            document.getElementById('ac_utm_term').value = utmTermVal;
+            document.getElementById('ac_utm_content').value = utmContentVal;
+
+            // Set Formatação fields
+            const formadoNormalized = formado === 'sim' ? 'Sim' : (formado === 'nao' ? 'Não' : formado);
+            document.getElementById('ac_possui_graduacao').value = formadoNormalized;
+            document.getElementById('ac_area_formacao').value = formacao;
+
+            // Registration Date: formatted in Brasilia time (GMT-3)
+            const now = new Date();
+            const offsetMs = -3 * 60 * 60 * 1000;
+            const localTime = new Date(now.getTime() + offsetMs);
+            const formattedDate = localTime.toISOString().slice(0, 19).replace('T', ' ');
+            document.getElementById('ac_data_inscricao').value = formattedDate;
 
             // 1. Meta Pixel Lead Tracking
             try {
@@ -352,83 +348,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('GTM Lead event error:', gtmErr);
             }
 
+            // 3. Direct HTML Form Submit to Hidden Iframe (ActiveCampaign proc.php)
             try {
-                // 3. Send lead to Vercel API Route (which forwards to ActiveCampaign on the server side)
-                const apiRes = await fetchWithTimeout('/api/activecampaign', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, email, telefone, utms, formado, formacao }),
-                    timeout: 4000
-                });
-                if (!apiRes.ok) {
-                    console.error('Failed to sync via API route:', await apiRes.text());
-                }
-            } catch (err) {
-                console.error('ActiveCampaign sync error:', err);
-                // Fail silently: still redirect the user
+                captureForm.submit();
+            } catch (submitErr) {
+                console.error('Direct AC submit error:', submitErr);
             }
 
-            // Build Tally redirection URL passing the UTM values
-            // Build Tally redirection URL passing the UTM values (various cases to match Tally hidden fields)
-            const queryParams = new URLSearchParams();
-            
-            // Uppercase Custom UTMs
-            if (utmSourceVal) queryParams.set('L01ACAODEVITALICIO_UTM_SOURCE', utmSourceVal);
-            if (utmMediumVal) queryParams.set('L01ACAODEVITALICIO_UTM_MEDIUM', utmMediumVal);
-            if (utmCampaignVal) queryParams.set('L01ACAODEVITALICIO_UTM_CAMPAIGN', utmCampaignVal);
-            if (utmContentVal) queryParams.set('L01ACAODEVITALICIO_UTM_CONTENT', utmContentVal);
-            if (utmTermVal) queryParams.set('L01ACAODEVITALICIO_UTM_TERM', utmTermVal);
-
-            // Lowercase Custom UTMs
-            if (utmSourceVal) queryParams.set('l01acaodevitalicio_utm_source', utmSourceVal);
-            if (utmMediumVal) queryParams.set('l01acaodevitalicio_utm_medium', utmMediumVal);
-            if (utmCampaignVal) queryParams.set('l01acaodevitalicio_utm_campaign', utmCampaignVal);
-            if (utmContentVal) queryParams.set('l01acaodevitalicio_utm_content', utmContentVal);
-            if (utmTermVal) queryParams.set('l01acaodevitalicio_utm_term', utmTermVal);
-
-            // Standard UTMs
-            if (utmSourceVal) queryParams.set('utm_source', utmSourceVal);
-            if (utmMediumVal) queryParams.set('utm_medium', utmMediumVal);
-            if (utmCampaignVal) queryParams.set('utm_campaign', utmCampaignVal);
-            if (utmContentVal) queryParams.set('utm_content', utmContentVal);
-            if (utmTermVal) queryParams.set('utm_term', utmTermVal);
-
-            // Prefilled Lead Fields (multiple variations to match Tally hidden fields/labels)
-            queryParams.set('nome', nome);
-            queryParams.set('Nome', nome);
-            queryParams.set('name', nome);
-            queryParams.set('Name', nome);
-
-            queryParams.set('email', email);
-            queryParams.set('Email', email);
-            queryParams.set('e-mail', email);
-            queryParams.set('E-mail', email);
-
-            queryParams.set('telefone', telefone);
-            queryParams.set('Telefone', telefone);
-            queryParams.set('whatsapp', telefone);
-            queryParams.set('Whatsapp', telefone);
-            queryParams.set('WhatsApp', telefone);
-            queryParams.set('phone', telefone);
-            queryParams.set('Phone', telefone);
-
-            if (formacao) {
-                queryParams.set('formacao', formacao);
-                queryParams.set('Formacao', formacao);
-                queryParams.set('formação', formacao);
-                queryParams.set('Formação', formacao);
-            }
-
-            const finalRedirectUrl = `${TALLY_REDIRECT}?${queryParams.toString()}`;
-
-            // Calculate elapsed time and enforce a minimum delay of 1200ms to allow tracking events to fire completely
-            const elapsed = Date.now() - submitStartTime;
-            const remainingDelay = Math.max(0, 1200 - elapsed);
-
+            // Wait 1500ms to allow submission to finish inside the hidden iframe, then redirect to Tally
             setTimeout(() => {
                 btn.textContent = 'Redirecionando...';
-                window.location.href = finalRedirectUrl;
-            }, remainingDelay);
+                window.location.href = TALLY_REDIRECT;
+            }, 1500);
         });
     }
 
