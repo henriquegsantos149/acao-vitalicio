@@ -594,6 +594,11 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
 }
 
+.bg-light .guarantee-box {
+    background: #ffffff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
 .guarantee-icon {
     font-size: 4rem;
     margin-bottom: 1rem;
@@ -609,6 +614,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .g-item h3 {
     color: var(--green-1);
+}
+
+.g-item p {
+    color: #333333;
 }
 
 /* Pricing Preview Section */
