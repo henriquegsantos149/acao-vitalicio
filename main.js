@@ -170,30 +170,65 @@ document.addEventListener('DOMContentLoaded', () => {
         'L01ACAODEVITALICIO_UTM_SOURCE', 'L01ACAODEVITALICIO_UTM_MEDIUM', 'L01ACAODEVITALICIO_UTM_CAMPAIGN', 'L01ACAODEVITALICIO_UTM_CONTENT', 'L01ACAODEVITALICIO_UTM_TERM'
     ];
 
-    // Helper: get all UTM params from the current URL (trimmed and sanitized)
+    // Helper: get all UTM params from the current URL (trimmed, handles standard key=value and concatenated value formats)
     function getUTMParams() {
         const params = new URLSearchParams(window.location.search);
         const utms = {};
-        UTM_KEYS.forEach(key => {
-            if (params.get(key)) utms[key] = params.get(key).trim();
-        });
-        // Fuzzy search matching trimmed/spaced keys
+        
+        const targetKeys = {
+            'L01ACAODEVITALICIO_UTM_SOURCE': '',
+            'L01ACAODEVITALICIO_UTM_MEDIUM': '',
+            'L01ACAODEVITALICIO_UTM_CAMPAIGN': '',
+            'L01ACAODEVITALICIO_UTM_CONTENT': '',
+            'L01ACAODEVITALICIO_UTM_TERM': '',
+            'utm_source': '',
+            'utm_medium': '',
+            'utm_campaign': '',
+            'utm_content': '',
+            'utm_term': ''
+        };
+
+        // Parse search params
         for (const [key, value] of params.entries()) {
             const cleanKey = key.trim();
-            if (UTM_KEYS.includes(cleanKey)) {
-                utms[cleanKey] = value.trim();
+            const cleanVal = value.trim();
+
+            if (cleanVal !== '') {
+                // Case 1: Standard key=value
+                for (const targetKey in targetKeys) {
+                    if (cleanKey === targetKey || cleanKey.toLowerCase() === targetKey.toLowerCase()) {
+                        utms[targetKey] = cleanVal;
+                    }
+                }
+            } else {
+                // Case 2: Concatenated key (e.g. L01ACAODEVITALICIO_UTM_SOURCEEmail)
+                for (const targetKey in targetKeys) {
+                    if (cleanKey.startsWith(targetKey)) {
+                        const extractedVal = cleanKey.slice(targetKey.length).trim();
+                        if (extractedVal) {
+                            utms[targetKey] = extractedVal;
+                        }
+                    }
+                }
             }
         }
+        
+        // Direct fallback for any standard formats
+        UTM_KEYS.forEach(key => {
+            if (!utms[key] && params.get(key)) {
+                utms[key] = params.get(key).trim();
+            }
+        });
+        
         return utms;
     }
 
     // Persist UTMs to sessionStorage so they survive redirects
     (function persistUTMs() {
-        const params = new URLSearchParams(window.location.search);
-        for (const [key, value] of params.entries()) {
-            const cleanKey = key.trim();
-            if (UTM_KEYS.includes(cleanKey) || cleanKey.startsWith('utm_') || cleanKey.includes('UTM_')) {
-                sessionStorage.setItem(cleanKey, value.trim());
+        const utms = getUTMParams();
+        for (const key in utms) {
+            if (utms[key]) {
+                sessionStorage.setItem(key, utms[key]);
             }
         }
     })();
