@@ -617,7 +617,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .g-item p {
-    color: #333333;
+    color: #333333; /* para uso em fundo claro */
+}
+
+/* Garantia no fundo ESCURO: textos claros */
+.guarantee-section:not(.bg-light) h2 {
+    color: var(--light-gray);
+}
+
+.guarantee-section:not(.bg-light) .g-item p {
+    color: #a0a4a0;
 }
 
 /* Pricing Preview Section */
