@@ -199,12 +199,23 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 0.875rem;
     text-decoration: none;
     transition: all 0.3s ease;
+    animation: nav-cta-glow 2s ease-in-out infinite;
+}
+
+@keyframes nav-cta-glow {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(111, 176, 58, 0.4), 0 0 20px rgba(111, 176, 58, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(111, 176, 58, 0.8), 0 0 40px rgba(111, 176, 58, 0.4), 0 0 60px rgba(49, 168, 168, 0.2);
+    }
 }
 
 .nav-cta:hover {
     background: var(--green-1);
     color: var(--primary-dark);
-    box-shadow: 0 5px 15px rgba(111, 176, 58, 0.3);
+    box-shadow: 0 5px 20px rgba(111, 176, 58, 0.6), 0 0 40px rgba(111, 176, 58, 0.3);
+    animation: none;
 }
 
 .logo {
