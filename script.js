@@ -19,42 +19,48 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Countdown Timer Logic
-    // Target: June 9, 2026 at 20:00:00 (Brasília time)
-    const targetDate = new Date('2026-06-09T20:00:00-03:00').getTime();
+    try {
+        // Target: June 9, 2026 at 20:00:00 (Brasília time GMT-3)
+        // Usando Date.UTC para ser 100% à prova de falhas (sem parse de string)
+        const targetDate = new Date(Date.UTC(2026, 5, 9, 23, 0, 0)).getTime();
 
-    const daysEl = document.getElementById('days');
-    const hoursEl = document.getElementById('hours');
-    const minutesEl = document.getElementById('minutes');
-    const secondsEl = document.getElementById('seconds');
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
 
-    function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = targetDate - now;
+        function updateCountdown() {
+            if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+            const now = new Date().getTime();
+            const distance = targetDate - now;
 
-        if (distance < 0) {
-            // Live started
-            daysEl.innerText = "00";
-            hoursEl.innerText = "00";
-            minutesEl.innerText = "00";
-            secondsEl.innerText = "00";
-            return;
+            if (distance < 0 || isNaN(distance)) {
+                // Live started or invalid date
+                daysEl.innerText = "00";
+                hoursEl.innerText = "00";
+                minutesEl.innerText = "00";
+                secondsEl.innerText = "00";
+                return;
+            }
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Add leading zero
+            daysEl.innerText = days < 10 ? '0' + days : days;
+            hoursEl.innerText = hours < 10 ? '0' + hours : hours;
+            minutesEl.innerText = minutes < 10 ? '0' + minutes : minutes;
+            secondsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
         }
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        // Add leading zero
-        daysEl.innerText = days < 10 ? '0' + days : days;
-        hoursEl.innerText = hours < 10 ? '0' + hours : hours;
-        minutesEl.innerText = minutes < 10 ? '0' + minutes : minutes;
-        secondsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+        // Update immediately and then every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    } catch (error) {
+        console.error("Erro no cronômetro:", error);
     }
-
-    // Update immediately and then every second
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
 
     // Mouse movement effect on background glow
     const glowTop = document.querySelector('.glow-effect.top-left');
