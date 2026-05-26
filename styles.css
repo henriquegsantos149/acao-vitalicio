@@ -948,6 +948,37 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.6;
 }
 
+/* FAQ no fundo ESCURO (sem bg-light) */
+.faq-section:not(.bg-light) .faq-item {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.faq-section:not(.bg-light) .faq-question {
+    color: var(--light-gray);
+}
+
+.faq-section:not(.bg-light) .faq-item.active .faq-question {
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+.faq-section:not(.bg-light) .faq-answer {
+    background-color: rgba(255,255,255,0.03);
+}
+
+.faq-section:not(.bg-light) .faq-answer p {
+    color: #a0a4a0 !important;
+}
+
+/* Depoimentos no fundo CLARO */
+.testimonials-section.bg-light {
+    background-color: var(--light-gray) !important;
+}
+
+.testimonials-section.bg-light .section-title {
+    color: var(--primary-dark) !important;
+}
+
 /* Lightbox Styles */
 .lightbox-modal {
     display: none;
