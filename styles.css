@@ -1067,6 +1067,10 @@ h1, h2, h3, h4, h5, h6 {
         margin-top: -5px;
     }
     
+    .method-content .text-content h2 {
+        font-size: 1.8rem;
+    }
+    
     /* Pricing optimizations */
     .price-body {
         padding: 2rem 1.5rem;
@@ -1118,17 +1122,14 @@ h1, h2, h3, h4, h5, h6 {
 
     /* Fix Carousel Buttons causing horizontal scroll */
     .maps-carousel-wrapper {
-        max-width: 80%; /* Deixa espaço nas bordas para os botões */
+        max-width: 100%;
     }
     .carousel-btn {
         padding: 0 0.5rem;
         font-size: 2rem;
     }
-    .carousel-btn.prev-btn[style*="absolute"] {
-        left: -30px !important;
-    }
-    .carousel-btn.next-btn[style*="absolute"] {
-        right: -30px !important;
+    .method-content .text-content h2 {
+        font-size: 1.5rem;
     }
 
     /* Fix pricing amount size */
