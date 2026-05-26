@@ -243,6 +243,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const nome = document.getElementById('nome').value;
             const email = document.getElementById('email').value;
             const telefone = document.getElementById('telefone').value;
+            const formadoSelectEl = document.getElementById('formado');
+            const formado = formadoSelectEl ? formadoSelectEl.value : '';
             const formacaoEl = document.getElementById('formacao');
             const formacao = formacaoEl ? formacaoEl.value : '';
 
@@ -320,7 +322,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const apiRes = await fetchWithTimeout('/api/activecampaign', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, email, telefone, utms, formacao }),
+                    body: JSON.stringify({ nome, email, telefone, utms, formado, formacao }),
                     timeout: 4000
                 });
                 if (!apiRes.ok) {

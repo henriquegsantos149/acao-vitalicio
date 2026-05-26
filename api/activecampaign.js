@@ -3,7 +3,7 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { nome, email, telefone, utms, formacao } = req.body;
+    const { nome, email, telefone, utms, formado, formacao } = req.body;
 
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
@@ -52,12 +52,17 @@ export default async function handler(req, res) {
             }
         }
 
-        addField(['L01ACAODEVITALICIO_UTM_SOURCE', 'utm_source', 'utm source'], sourceVal);
-        addField(['L01ACAODEVITALICIO_UTM_MEDIUM', 'utm_medium', 'utm medium'], mediumVal);
-        addField(['L01ACAODEVITALICIO_UTM_CAMPAIGN', 'utm_campaign', 'utm campaign'], campaignVal);
-        addField(['L01ACAODEVITALICIO_UTM_CONTENT', 'utm_content', 'utm content'], contentVal);
-        addField(['L01ACAODEVITALICIO_UTM_TERM', 'utm_term', 'utm term'], termVal);
-        addField(['formacao', 'formação', 'qual a sua formação', 'qual a sua formacao'], formacao);
+        // Map UTM fields with expanded match variations
+        addField(['L01ACAODEVITALICIO_UTM_SOURCE', 'utm_source', 'utm source', 'source'], sourceVal);
+        addField(['L01ACAODEVITALICIO_UTM_MEDIUM', 'utm_medium', 'utm medium', 'medium'], mediumVal);
+        addField(['L01ACAODEVITALICIO_UTM_CAMPAIGN', 'utm_campaign', 'utm campaign', 'campaign'], campaignVal);
+        addField(['L01ACAODEVITALICIO_UTM_CONTENT', 'utm_content', 'utm content', 'content'], contentVal);
+        addField(['L01ACAODEVITALICIO_UTM_TERM', 'utm_term', 'utm term', 'term'], termVal);
+
+        // Normalize formed status for nice Sheet representation
+        const formadoNormalized = formado === 'sim' ? 'Sim' : (formado === 'nao' ? 'Não' : formado);
+        addField(['possui graduacao', 'possui graduação', 'formado', 'graduado', 'voce ja e formado'], formadoNormalized);
+        addField(['area de formacao', 'área de formação', 'formacao', 'formação', 'qual a sua formação'], formacao);
 
         // 2. Sync / Upsert Contact in ActiveCampaign
         const nameParts = nome.trim().split(' ');
