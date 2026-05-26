@@ -14,21 +14,6 @@ export default async function handler(req, res) {
     const AC_TAG_NAME = '[L01][ACAODEVITALICIO] Lead';
 
     try {
-        // 1. Fetch Custom Fields to map UTMs and Formacao
-        const fieldsRes = await fetch(`${AC_API_URL}/api/3/fields?limit=100`, {
-            headers: { 'Api-Token': AC_API_KEY }
-        });
-        
-        let fieldMap = {};
-        if (fieldsRes.ok) {
-            const data = await fieldsRes.json();
-            if (data.fields) {
-                data.fields.forEach(f => {
-                    fieldMap[f.title.toLowerCase().trim()] = f.id;
-                });
-            }
-        }
-
         const fieldValues = [];
         
         const sourceVal = utms['L01ACAODEVITALICIO_UTM_SOURCE'] || utms['utm_source'] || '';
@@ -37,32 +22,29 @@ export default async function handler(req, res) {
         const contentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
         const termVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
 
-        function addField(titleOptions, value) {
-            if (!value) return;
-            const normalizedOptions = titleOptions.map(opt => opt.toLowerCase().trim());
-            for (const option of normalizedOptions) {
-                const cleanOption = option.replace(/[^a-z0-9]/g, '');
-                for (const key in fieldMap) {
-                    const cleanKey = key.replace(/[^a-z0-9]/g, '');
-                    if (cleanKey === cleanOption || cleanKey.includes(cleanOption) || cleanOption.includes(cleanKey)) {
-                        fieldValues.push({ field: fieldMap[key], value: value });
-                        return;
-                    }
-                }
-            }
-        }
+        // 1. Direct field mapping by verified ActiveCampaign custom field IDs
+        // Launch [L01][ACAODEVITALICIO] UTM fields
+        if (sourceVal) fieldValues.push({ field: '755', value: sourceVal });
+        if (campaignVal) fieldValues.push({ field: '756', value: campaignVal });
+        if (mediumVal) fieldValues.push({ field: '757', value: mediumVal });
+        if (termVal) fieldValues.push({ field: '758', value: termVal });
+        if (contentVal) fieldValues.push({ field: '759', value: contentVal });
 
-        // Map UTM fields with expanded match variations
-        addField(['L01ACAODEVITALICIO_UTM_SOURCE', 'utm_source', 'utm source', 'source'], sourceVal);
-        addField(['L01ACAODEVITALICIO_UTM_MEDIUM', 'utm_medium', 'utm medium', 'medium'], mediumVal);
-        addField(['L01ACAODEVITALICIO_UTM_CAMPAIGN', 'utm_campaign', 'utm campaign', 'campaign'], campaignVal);
-        addField(['L01ACAODEVITALICIO_UTM_CONTENT', 'utm_content', 'utm content', 'content'], contentVal);
-        addField(['L01ACAODEVITALICIO_UTM_TERM', 'utm_term', 'utm term', 'term'], termVal);
+        // Generic UTM fields (fallback/redundancy support)
+        if (sourceVal) fieldValues.push({ field: '12', value: sourceVal }); // utm_source
+        if (mediumVal) fieldValues.push({ field: '11', value: mediumVal }); // utm_medium
 
-        // Normalize formed status for nice Sheet representation
+        // Registration Date: formatted in Brasilia time (GMT-3)
+        const now = new Date();
+        const offsetMs = -3 * 60 * 60 * 1000;
+        const localTime = new Date(now.getTime() + offsetMs);
+        const formattedDate = localTime.toISOString().slice(0, 19).replace('T', ' ');
+        fieldValues.push({ field: '760', value: formattedDate }); // [L01][ACAODEVITALICIO] UTM Data de inscrição
+
+        // Formação / Graduação
         const formadoNormalized = formado === 'sim' ? 'Sim' : (formado === 'nao' ? 'Não' : formado);
-        addField(['possui graduacao', 'possui graduação', 'formado', 'graduado', 'voce ja e formado'], formadoNormalized);
-        addField(['area de formacao', 'área de formação', 'formacao', 'formação', 'qual a sua formação'], formacao);
+        if (formadoNormalized) fieldValues.push({ field: '761', value: formadoNormalized }); // [L01][ACAODEVITALICIO] UTM Possui graduacão
+        if (formacao) fieldValues.push({ field: '762', value: formacao }); // [L01][ACAODEVITALICIO] UTM Área de formação
 
         // 2. Sync / Upsert Contact in ActiveCampaign
         const nameParts = nome.trim().split(' ');
