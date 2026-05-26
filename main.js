@@ -94,6 +94,72 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Email format validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // Real-time phone input masking & character limiting (max 11 digits / 15 chars formatted)
+    const phoneInput = document.getElementById('telefone');
+    if (phoneInput) {
+        phoneInput.setAttribute('maxlength', '15');
+        phoneInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            if (value.length > 11) {
+                value = value.slice(0, 11);
+            }
+            
+            // Format phone number dynamically: (XX) XXXXX-XXXX or (XX) XXXX-XXXX
+            if (value.length > 6) {
+                const isNineDigit = value.length > 10;
+                const ddd = value.slice(0, 2);
+                const part1 = value.slice(2, isNineDigit ? 7 : 6);
+                const part2 = value.slice(isNineDigit ? 7 : 6);
+                e.target.value = `(${ddd}) ${part1}-${part2}`;
+            } else if (value.length > 2) {
+                const ddd = value.slice(0, 2);
+                const part1 = value.slice(2);
+                e.target.value = `(${ddd}) ${part1}`;
+            } else if (value.length > 0) {
+                e.target.value = `(${value}`;
+            } else {
+                e.target.value = '';
+            }
+            
+            // Remove invalid style if complete or empty
+            if (value.length >= 10 || value.length === 0) {
+                phoneInput.classList.remove('is-invalid');
+            }
+        });
+
+        phoneInput.addEventListener('blur', function (e) {
+            const value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0 && value.length < 10) {
+                phoneInput.classList.add('is-invalid');
+            } else {
+                phoneInput.classList.remove('is-invalid');
+            }
+        });
+    }
+
+    // Real-time email validation on blur & input
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('blur', function () {
+            const value = emailInput.value.trim();
+            if (value.length > 0 && !emailRegex.test(value)) {
+                emailInput.classList.add('is-invalid');
+            } else {
+                emailInput.classList.remove('is-invalid');
+            }
+        });
+
+        emailInput.addEventListener('input', function () {
+            const value = emailInput.value.trim();
+            if (value.length === 0 || emailRegex.test(value)) {
+                emailInput.classList.remove('is-invalid');
+            }
+        });
+    }
+
     // ============================================================
     // ACTIVE CAMPAIGN INTEGRATION
     // ============================================================
@@ -278,6 +344,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const telefone = document.getElementById('telefone').value;
             const formacaoEl = document.getElementById('formacao');
             const formacao = formacaoEl ? formacaoEl.value : '';
+
+            // Validation
+            let hasError = false;
+
+            // Validate email format
+            const emailVal = email.trim();
+            if (!emailVal || !emailRegex.test(emailVal)) {
+                if (emailInput) emailInput.classList.add('is-invalid');
+                hasError = true;
+            } else {
+                if (emailInput) emailInput.classList.remove('is-invalid');
+            }
+
+            // Validate phone format (must be 10 or 11 digits)
+            const phoneDigits = telefone.replace(/\D/g, '');
+            if (!phoneDigits || phoneDigits.length < 10) {
+                if (phoneInput) phoneInput.classList.add('is-invalid');
+                hasError = true;
+            } else {
+                if (phoneInput) phoneInput.classList.remove('is-invalid');
+            }
+
+            if (hasError) {
+                btn.textContent = 'INSCREVER-SE GRATUITAMENTE';
+                btn.disabled = false;
+                const firstInvalid = captureForm.querySelector('.is-invalid');
+                if (firstInvalid) firstInvalid.focus();
+                return;
+            }
 
             // Merge URL UTMs with persisted session UTMs
             const utms = { ...getPersistedUTMs(), ...getUTMParams() };

@@ -431,6 +431,16 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(255,255,255,0.1);
 }
 
+.brand-shape-input.is-invalid {
+    border-color: #ff4a4a !important;
+    background: rgba(255, 74, 74, 0.05) !important;
+}
+
+.brand-shape-input.is-invalid:focus {
+    border-color: #ff4a4a !important;
+    box-shadow: 0 0 0 2px rgba(255, 74, 74, 0.2);
+}
+
 .brand-shape-input option {
     background-color: var(--primary-dark);
     color: var(--light-gray);
