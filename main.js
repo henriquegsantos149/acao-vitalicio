@@ -548,4 +548,112 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    // Ementa Modal Slider Logic
+    const btnEmenta = document.getElementById('btn-ementa');
+    const ementaModal = document.getElementById('ementa-modal');
+    const ementaImg = document.getElementById('ementa-img');
+    const ementaIndicator = document.getElementById('ementa-page-indicator');
+    const ementaClose = document.querySelector('.ementa-close');
+    const ementaPrevBtn = ementaModal ? ementaModal.querySelector('.prev-btn') : null;
+    const ementaNextBtn = ementaModal ? ementaModal.querySelector('.next-btn') : null;
+
+    let currentEmentaPage = 1;
+    const totalEmentaPages = 37;
+
+    function showEmentaPage(page) {
+        if (!ementaImg || !ementaIndicator) return;
+        
+        if (page < 1) {
+            page = totalEmentaPages;
+        } else if (page > totalEmentaPages) {
+            page = 1;
+        }
+        
+        currentEmentaPage = page;
+        ementaImg.src = `Public/Ementa/${currentEmentaPage}.png`;
+        ementaIndicator.textContent = `${currentEmentaPage} / ${totalEmentaPages}`;
+    }
+
+    function openEmentaModal() {
+        if (!ementaModal) return;
+        showEmentaPage(1);
+        ementaModal.classList.add('show');
+        document.body.style.overflow = 'hidden'; // Disable page scrolling
+    }
+
+    function closeEmentaModal() {
+        if (!ementaModal) return;
+        ementaModal.classList.remove('show');
+        document.body.style.overflow = ''; // Restore page scrolling
+    }
+
+    if (btnEmenta) {
+        btnEmenta.addEventListener('click', openEmentaModal);
+    }
+
+    if (ementaClose) {
+        ementaClose.addEventListener('click', closeEmentaModal);
+    }
+
+    if (ementaModal) {
+        ementaModal.addEventListener('click', (e) => {
+            if (e.target === ementaModal) {
+                closeEmentaModal();
+            }
+        });
+    }
+
+    if (ementaPrevBtn) {
+        ementaPrevBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showEmentaPage(currentEmentaPage - 1);
+        });
+    }
+
+    if (ementaNextBtn) {
+        ementaNextBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            showEmentaPage(currentEmentaPage + 1);
+        });
+    }
+
+    // Keyboard navigation for Ementa Modal
+    document.addEventListener('keydown', (e) => {
+        if (!ementaModal || !ementaModal.classList.contains('show')) return;
+
+        if (e.key === 'ArrowLeft') {
+            showEmentaPage(currentEmentaPage - 1);
+        } else if (e.key === 'ArrowRight') {
+            showEmentaPage(currentEmentaPage + 1);
+        } else if (e.key === 'Escape') {
+            closeEmentaModal();
+        }
+    });
+
+    // Touch/Swipe navigation for mobile users
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    if (ementaImg) {
+        ementaImg.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        ementaImg.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+    }
+
+    function handleSwipe() {
+        const threshold = 50; // swipe detection sensitivity
+        if (touchEndX < touchStartX - threshold) {
+            // Swipe Left -> Next Page
+            showEmentaPage(currentEmentaPage + 1);
+        } else if (touchEndX > touchStartX + threshold) {
+            // Swipe Right -> Previous Page
+            showEmentaPage(currentEmentaPage - 1);
+        }
+    }
 });
