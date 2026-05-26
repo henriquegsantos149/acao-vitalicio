@@ -94,20 +94,148 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ============================================================
+    // ACTIVE CAMPAIGN INTEGRATION
+    // ============================================================
+    const AC_API_URL = 'https://ambientalpro.api-us1.com'; // <-- URL base da conta ActiveCampaign
+    const AC_API_KEY = '9617e0716b9a89bc87a2d382d9aeedc19df5bb57f5fd0af5278e9d788fe96c711fa0ebe6';
+    const AC_TAG_NAME = '[L01][ACAODEVITALICIO]';
+    const TALLY_REDIRECT = 'https://tally.so/r/81R28O';
+
+    // Helper: get all UTM params from the current URL
+    function getUTMParams() {
+        const params = new URLSearchParams(window.location.search);
+        const utms = {};
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(key => {
+            if (params.get(key)) utms[key] = params.get(key);
+        });
+        return utms;
+    }
+
+    // Persist UTMs to sessionStorage so they survive redirects
+    (function persistUTMs() {
+        const params = new URLSearchParams(window.location.search);
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(key => {
+            if (params.get(key)) sessionStorage.setItem(key, params.get(key));
+        });
+    })();
+
+    // Helper: get UTMs from sessionStorage (fallback for persisted values)
+    function getPersistedUTMs() {
+        const utms = {};
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(key => {
+            const val = sessionStorage.getItem(key);
+            if (val) utms[key] = val;
+        });
+        return utms;
+    }
+
+    // AC API: get tag ID by name, create if not exists
+    async function getOrCreateTagId(tagName) {
+        // Search for the tag
+        const searchRes = await fetch(`${AC_API_URL}/api/3/tags?search=${encodeURIComponent(tagName)}`, {
+            headers: { 'Api-Token': AC_API_KEY }
+        });
+        const searchData = await searchRes.json();
+        if (searchData.tags && searchData.tags.length > 0) {
+            return searchData.tags[0].id;
+        }
+        // Create if not found
+        const createRes = await fetch(`${AC_API_URL}/api/3/tags`, {
+            method: 'POST',
+            headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tag: { tag: tagName, tagType: 'contact', description: '' } })
+        });
+        const createData = await createRes.json();
+        return createData.tag.id;
+    }
+
+    // AC API: create or update contact, returns contact ID
+    async function upsertContact(nome, email, telefone, utms, formacao) {
+        const fieldValues = [];
+
+        // Map UTMs to AC custom fields (you can update IDs from AC account)
+        const utmFieldMap = {
+            utm_source:   'UTM Source',
+            utm_medium:   'UTM Medium',
+            utm_campaign: 'UTM Campaign',
+            utm_content:  'UTM Content',
+            utm_term:     'UTM Term',
+        };
+
+        // Build the contact payload
+        const nameParts = nome.trim().split(' ');
+        const firstName = nameParts[0];
+        const lastName = nameParts.slice(1).join(' ') || '';
+
+        const payload = {
+            contact: {
+                email: email,
+                firstName: firstName,
+                lastName: lastName,
+                phone: telefone,
+                fieldValues: fieldValues
+            }
+        };
+
+        const res = await fetch(`${AC_API_URL}/api/3/contact/sync`, {
+            method: 'POST',
+            headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        return data.contact ? data.contact.id : null;
+    }
+
+    // AC API: apply tag to contact
+    async function applyTagToContact(contactId, tagId) {
+        await fetch(`${AC_API_URL}/api/3/contactTags`, {
+            method: 'POST',
+            headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contactTag: { contact: contactId, tag: tagId } })
+        });
+    }
+
     // Form Submission Logic
     const captureForm = document.getElementById('capture-form');
     if (captureForm) {
-        captureForm.addEventListener('submit', function(e) {
+        captureForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
+
             const btn = captureForm.querySelector('button[type="submit"]');
-            btn.textContent = 'Redirecionando...';
+            btn.textContent = 'Enviando...';
             btn.disabled = true;
 
-            // Redireciona para o formulário do Tally imediatamente
-            window.location.href = 'https://tally.so/r/81R28O';
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const telefone = document.getElementById('telefone').value;
+            const formacaoEl = document.getElementById('formacao');
+            const formacao = formacaoEl ? formacaoEl.value : '';
+
+            // Merge URL UTMs with persisted session UTMs
+            const utms = { ...getPersistedUTMs(), ...getUTMParams() };
+
+            try {
+                // 1. Create or update the contact
+                const contactId = await upsertContact(nome, email, telefone, utms, formacao);
+
+                if (contactId) {
+                    // 2. Get or create the tag
+                    const tagId = await getOrCreateTagId(AC_TAG_NAME);
+                    // 3. Apply tag to contact
+                    await applyTagToContact(contactId, tagId);
+                }
+            } catch (err) {
+                console.error('ActiveCampaign integration error:', err);
+                // Fail silently: still redirect the user
+            }
+
+            // Always redirect to Tally after attempting AC sync
+            btn.textContent = 'Redirecionando...';
+            window.location.href = TALLY_REDIRECT;
         });
     }
+
 
     // Lightbox Logic
     const lightboxModal = document.getElementById('lightbox-modal');
