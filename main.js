@@ -163,9 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     // ACTIVE CAMPAIGN INTEGRATION
     // ============================================================
-    const AC_API_URL = 'https://ambientalpro.api-us1.com'; // <-- URL base da conta ActiveCampaign
-    const AC_API_KEY = '9617e0716b9a89bc87a2d382d9aeedc19df5bb57f5fd0af5278e9d788fe96c711fa0ebe6';
-    const AC_TAG_NAME = '[L01][ACAODEVITALICIO] Lead';
     const TALLY_REDIRECT = 'https://tally.so/r/81R28O';
 
     const UTM_KEYS = [
@@ -231,126 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Cached AC custom fields mapping (title -> id)
-    let acFieldMap = null;
 
-    async function fetchACFields() {
-        if (acFieldMap) return acFieldMap;
-        try {
-            const res = await fetchWithTimeout(`${AC_API_URL}/api/3/fields?limit=100`, {
-                headers: { 'Api-Token': AC_API_KEY },
-                timeout: 3000
-            });
-            if (!res.ok) return {};
-            const data = await res.json();
-            const map = {};
-            if (data.fields) {
-                data.fields.forEach(f => {
-                    map[f.title.toLowerCase().trim()] = f.id;
-                });
-            }
-            acFieldMap = map;
-            return map;
-        } catch (err) {
-            console.error('Error fetching AC fields:', err);
-            return {};
-        }
-    }
-
-    // AC API: get tag ID by name, create if not exists
-    async function getOrCreateTagId(tagName) {
-        // Search for the tag
-        const searchRes = await fetchWithTimeout(`${AC_API_URL}/api/3/tags?search=${encodeURIComponent(tagName)}`, {
-            headers: { 'Api-Token': AC_API_KEY },
-            timeout: 3000
-        });
-        const searchData = await searchRes.json();
-        if (searchData.tags && searchData.tags.length > 0) {
-            return searchData.tags[0].id;
-        }
-        // Create if not found
-        const createRes = await fetchWithTimeout(`${AC_API_URL}/api/3/tags`, {
-            method: 'POST',
-            headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: { tag: tagName, tagType: 'contact', description: '' } }),
-            timeout: 3000
-        });
-        const createData = await createRes.json();
-        return createData.tag.id;
-    }
-
-    // AC API: create or update contact, returns contact ID
-    async function upsertContact(nome, email, telefone, utms, formacao) {
-        const fieldValues = [];
-        
-        try {
-            const fieldMap = await fetchACFields();
-            
-            const sourceVal = utms['L01ACAODEVITALICIO_UTM_SOURCE'] || utms['utm_source'] || '';
-            const mediumVal = utms['L01ACAODEVITALICIO_UTM_MEDIUM'] || utms['utm_medium'] || '';
-            const campaignVal = utms['L01ACAODEVITALICIO_UTM_CAMPAIGN'] || utms['utm_campaign'] || '';
-            const contentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
-            const termVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
-
-            function addField(titleOptions, value) {
-                if (!value) return;
-                const normalizedOptions = titleOptions.map(opt => opt.toLowerCase().trim());
-                for (const option of normalizedOptions) {
-                    const cleanOption = option.replace(/[^a-z0-9]/g, '');
-                    for (const key in fieldMap) {
-                        const cleanKey = key.replace(/[^a-z0-9]/g, '');
-                        if (cleanKey === cleanOption || cleanKey.includes(cleanOption) || cleanOption.includes(cleanKey)) {
-                            fieldValues.push({ field: fieldMap[key], value: value });
-                            return;
-                        }
-                    }
-                }
-            }
-
-            addField(['L01ACAODEVITALICIO_UTM_SOURCE', 'utm_source', 'utm source'], sourceVal);
-            addField(['L01ACAODEVITALICIO_UTM_MEDIUM', 'utm_medium', 'utm medium'], mediumVal);
-            addField(['L01ACAODEVITALICIO_UTM_CAMPAIGN', 'utm_campaign', 'utm campaign'], campaignVal);
-            addField(['L01ACAODEVITALICIO_UTM_CONTENT', 'utm_content', 'utm content'], contentVal);
-            addField(['L01ACAODEVITALICIO_UTM_TERM', 'utm_term', 'utm term'], termVal);
-            addField(['formacao', 'formação', 'qual a sua formação', 'qual a sua formacao'], formacao);
-        } catch (err) {
-            console.error('Error populating custom fields:', err);
-        }
-
-        // Build the contact payload
-        const nameParts = nome.trim().split(' ');
-        const firstName = nameParts[0];
-        const lastName = nameParts.slice(1).join(' ') || '';
-
-        const payload = {
-            contact: {
-                email: email,
-                firstName: firstName,
-                lastName: lastName,
-                phone: telefone,
-                fieldValues: fieldValues
-            }
-        };
-
-        const res = await fetchWithTimeout(`${AC_API_URL}/api/3/contact/sync`, {
-            method: 'POST',
-            headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-            timeout: 3000
-        });
-        const data = await res.json();
-        return data.contact ? data.contact.id : null;
-    }
-
-    // AC API: apply tag to contact
-    async function applyTagToContact(contactId, tagId) {
-        await fetchWithTimeout(`${AC_API_URL}/api/3/contactTags`, {
-            method: 'POST',
-            headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contactTag: { contact: contactId, tag: tagId } }),
-            timeout: 3000
-        });
-    }
 
     // Form Submission Logic
     const captureForm = document.getElementById('capture-form');
@@ -438,17 +316,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                // 3. Create or update the contact in ActiveCampaign
-                const contactId = await upsertContact(nome, email, telefone, utms, formacao);
-
-                if (contactId) {
-                    // 4. Get or create the tag
-                    const tagId = await getOrCreateTagId(AC_TAG_NAME);
-                    // 5. Apply tag to contact
-                    await applyTagToContact(contactId, tagId);
+                // 3. Send lead to Vercel API Route (which forwards to ActiveCampaign on the server side)
+                const apiRes = await fetchWithTimeout('/api/activecampaign', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, email, telefone, utms, formacao }),
+                    timeout: 4000
+                });
+                if (!apiRes.ok) {
+                    console.error('Failed to sync via API route:', await apiRes.text());
                 }
             } catch (err) {
-                console.error('ActiveCampaign integration error:', err);
+                console.error('ActiveCampaign sync error:', err);
                 // Fail silently: still redirect the user
             }
 
