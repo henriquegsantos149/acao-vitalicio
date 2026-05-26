@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Countdown Timer Logic
-    // Target: June 9, 2026 at 20:00:00
-    const targetDate = new Date('June 9, 2026 20:00:00').getTime();
+    // Target: June 9, 2026 at 20:00:00 (Brasília time)
+    const targetDate = new Date('2026-06-09T20:00:00-03:00').getTime();
 
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
