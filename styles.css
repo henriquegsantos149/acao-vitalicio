@@ -754,6 +754,7 @@ h1, h2, h3, h4, h5, h6 {
 .carousel-track-wrapper {
     overflow: hidden;
     width: 100%;
+    min-width: 0; /* CRITICAL FIX: previne o flex-item de transbordar a tela expandindo o grid pai */
     padding: 2rem 0;
 }
 
@@ -994,7 +995,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Responsive */
 @media (max-width: 992px) {
     .hero-content, .method-content, .instructor-content {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr); /* Previne blowout do grid caso os filhos sejam maiores */
     }
     
     .hero-content {
