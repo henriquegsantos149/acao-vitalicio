@@ -213,14 +213,33 @@ document.addEventListener('DOMContentLoaded', () => {
         return utms;
     }
 
+    // Helper function to perform fetch with a timeout
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 3000 } = options; // Default 3 seconds timeout
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        try {
+            const response = await fetch(resource, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(id);
+            return response;
+        } catch (error) {
+            clearTimeout(id);
+            throw error;
+        }
+    }
+
     // Cached AC custom fields mapping (title -> id)
     let acFieldMap = null;
 
     async function fetchACFields() {
         if (acFieldMap) return acFieldMap;
         try {
-            const res = await fetch(`${AC_API_URL}/api/3/fields?limit=100`, {
-                headers: { 'Api-Token': AC_API_KEY }
+            const res = await fetchWithTimeout(`${AC_API_URL}/api/3/fields?limit=100`, {
+                headers: { 'Api-Token': AC_API_KEY },
+                timeout: 3000
             });
             if (!res.ok) return {};
             const data = await res.json();
@@ -241,18 +260,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // AC API: get tag ID by name, create if not exists
     async function getOrCreateTagId(tagName) {
         // Search for the tag
-        const searchRes = await fetch(`${AC_API_URL}/api/3/tags?search=${encodeURIComponent(tagName)}`, {
-            headers: { 'Api-Token': AC_API_KEY }
+        const searchRes = await fetchWithTimeout(`${AC_API_URL}/api/3/tags?search=${encodeURIComponent(tagName)}`, {
+            headers: { 'Api-Token': AC_API_KEY },
+            timeout: 3000
         });
         const searchData = await searchRes.json();
         if (searchData.tags && searchData.tags.length > 0) {
             return searchData.tags[0].id;
         }
         // Create if not found
-        const createRes = await fetch(`${AC_API_URL}/api/3/tags`, {
+        const createRes = await fetchWithTimeout(`${AC_API_URL}/api/3/tags`, {
             method: 'POST',
             headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tag: { tag: tagName, tagType: 'contact', description: '' } })
+            body: JSON.stringify({ tag: { tag: tagName, tagType: 'contact', description: '' } }),
+            timeout: 3000
         });
         const createData = await createRes.json();
         return createData.tag.id;
@@ -311,10 +332,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        const res = await fetch(`${AC_API_URL}/api/3/contact/sync`, {
+        const res = await fetchWithTimeout(`${AC_API_URL}/api/3/contact/sync`, {
             method: 'POST',
             headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            timeout: 3000
         });
         const data = await res.json();
         return data.contact ? data.contact.id : null;
@@ -322,10 +344,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // AC API: apply tag to contact
     async function applyTagToContact(contactId, tagId) {
-        await fetch(`${AC_API_URL}/api/3/contactTags`, {
+        await fetchWithTimeout(`${AC_API_URL}/api/3/contactTags`, {
             method: 'POST',
             headers: { 'Api-Token': AC_API_KEY, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contactTag: { contact: contactId, tag: tagId } })
+            body: JSON.stringify({ contactTag: { contact: contactId, tag: tagId } }),
+            timeout: 3000
         });
     }
 
