@@ -99,35 +99,77 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================================
     const AC_API_URL = 'https://ambientalpro.api-us1.com'; // <-- URL base da conta ActiveCampaign
     const AC_API_KEY = '9617e0716b9a89bc87a2d382d9aeedc19df5bb57f5fd0af5278e9d788fe96c711fa0ebe6';
-    const AC_TAG_NAME = '[L01][ACAODEVITALICIO]';
+    const AC_TAG_NAME = '[L01][ACAODEVITALICIO] Lead';
     const TALLY_REDIRECT = 'https://tally.so/r/81R28O';
 
-    // Helper: get all UTM params from the current URL
+    const UTM_KEYS = [
+        'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term',
+        'L01ACAODEVITALICIO_UTM_SOURCE', 'L01ACAODEVITALICIO_UTM_MEDIUM', 'L01ACAODEVITALICIO_UTM_CAMPAIGN', 'L01ACAODEVITALICIO_UTM_CONTENT', 'L01ACAODEVITALICIO_UTM_TERM'
+    ];
+
+    // Helper: get all UTM params from the current URL (trimmed and sanitized)
     function getUTMParams() {
         const params = new URLSearchParams(window.location.search);
         const utms = {};
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(key => {
-            if (params.get(key)) utms[key] = params.get(key);
+        UTM_KEYS.forEach(key => {
+            if (params.get(key)) utms[key] = params.get(key).trim();
         });
+        // Fuzzy search matching trimmed/spaced keys
+        for (const [key, value] of params.entries()) {
+            const cleanKey = key.trim();
+            if (UTM_KEYS.includes(cleanKey)) {
+                utms[cleanKey] = value.trim();
+            }
+        }
         return utms;
     }
 
     // Persist UTMs to sessionStorage so they survive redirects
     (function persistUTMs() {
         const params = new URLSearchParams(window.location.search);
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(key => {
-            if (params.get(key)) sessionStorage.setItem(key, params.get(key));
-        });
+        for (const [key, value] of params.entries()) {
+            const cleanKey = key.trim();
+            if (UTM_KEYS.includes(cleanKey) || cleanKey.startsWith('utm_') || cleanKey.includes('UTM_')) {
+                sessionStorage.setItem(cleanKey, value.trim());
+            }
+        }
     })();
 
     // Helper: get UTMs from sessionStorage (fallback for persisted values)
     function getPersistedUTMs() {
         const utms = {};
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'].forEach(key => {
-            const val = sessionStorage.getItem(key);
-            if (val) utms[key] = val;
-        });
+        for (let i = 0; i < sessionStorage.length; i++) {
+            const key = sessionStorage.key(i);
+            if (UTM_KEYS.includes(key) || key.startsWith('utm_') || key.includes('UTM_')) {
+                utms[key] = sessionStorage.getItem(key).trim();
+            }
+        }
         return utms;
+    }
+
+    // Cached AC custom fields mapping (title -> id)
+    let acFieldMap = null;
+
+    async function fetchACFields() {
+        if (acFieldMap) return acFieldMap;
+        try {
+            const res = await fetch(`${AC_API_URL}/api/3/fields?limit=100`, {
+                headers: { 'Api-Token': AC_API_KEY }
+            });
+            if (!res.ok) return {};
+            const data = await res.json();
+            const map = {};
+            if (data.fields) {
+                data.fields.forEach(f => {
+                    map[f.title.toLowerCase().trim()] = f.id;
+                });
+            }
+            acFieldMap = map;
+            return map;
+        } catch (err) {
+            console.error('Error fetching AC fields:', err);
+            return {};
+        }
     }
 
     // AC API: get tag ID by name, create if not exists
@@ -153,15 +195,40 @@ document.addEventListener('DOMContentLoaded', () => {
     // AC API: create or update contact, returns contact ID
     async function upsertContact(nome, email, telefone, utms, formacao) {
         const fieldValues = [];
+        
+        try {
+            const fieldMap = await fetchACFields();
+            
+            const sourceVal = utms['L01ACAODEVITALICIO_UTM_SOURCE'] || utms['utm_source'] || '';
+            const mediumVal = utms['L01ACAODEVITALICIO_UTM_MEDIUM'] || utms['utm_medium'] || '';
+            const campaignVal = utms['L01ACAODEVITALICIO_UTM_CAMPAIGN'] || utms['utm_campaign'] || '';
+            const contentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
+            const termVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
 
-        // Map UTMs to AC custom fields (you can update IDs from AC account)
-        const utmFieldMap = {
-            utm_source:   'UTM Source',
-            utm_medium:   'UTM Medium',
-            utm_campaign: 'UTM Campaign',
-            utm_content:  'UTM Content',
-            utm_term:     'UTM Term',
-        };
+            function addField(titleOptions, value) {
+                if (!value) return;
+                const normalizedOptions = titleOptions.map(opt => opt.toLowerCase().trim());
+                for (const option of normalizedOptions) {
+                    const cleanOption = option.replace(/[^a-z0-9]/g, '');
+                    for (const key in fieldMap) {
+                        const cleanKey = key.replace(/[^a-z0-9]/g, '');
+                        if (cleanKey === cleanOption || cleanKey.includes(cleanOption) || cleanOption.includes(cleanKey)) {
+                            fieldValues.push({ field: fieldMap[key], value: value });
+                            return;
+                        }
+                    }
+                }
+            }
+
+            addField(['L01ACAODEVITALICIO_UTM_SOURCE', 'utm_source', 'utm source'], sourceVal);
+            addField(['L01ACAODEVITALICIO_UTM_MEDIUM', 'utm_medium', 'utm medium'], mediumVal);
+            addField(['L01ACAODEVITALICIO_UTM_CAMPAIGN', 'utm_campaign', 'utm campaign'], campaignVal);
+            addField(['L01ACAODEVITALICIO_UTM_CONTENT', 'utm_content', 'utm content'], contentVal);
+            addField(['L01ACAODEVITALICIO_UTM_TERM', 'utm_term', 'utm term'], termVal);
+            addField(['formacao', 'formação', 'qual a sua formação', 'qual a sua formacao'], formacao);
+        } catch (err) {
+            console.error('Error populating custom fields:', err);
+        }
 
         // Build the contact payload
         const nameParts = nome.trim().split(' ');
@@ -215,14 +282,48 @@ document.addEventListener('DOMContentLoaded', () => {
             // Merge URL UTMs with persisted session UTMs
             const utms = { ...getPersistedUTMs(), ...getUTMParams() };
 
+            const utmSourceVal = utms['L01ACAODEVITALICIO_UTM_SOURCE'] || utms['utm_source'] || '';
+            const utmMediumVal = utms['L01ACAODEVITALICIO_UTM_MEDIUM'] || utms['utm_medium'] || '';
+            const utmCampaignVal = utms['L01ACAODEVITALICIO_UTM_CAMPAIGN'] || utms['utm_campaign'] || '';
+            const utmContentVal = utms['L01ACAODEVITALICIO_UTM_CONTENT'] || utms['utm_content'] || '';
+            const utmTermVal = utms['L01ACAODEVITALICIO_UTM_TERM'] || utms['utm_term'] || '';
+
+            // 1. Meta Pixel Lead Tracking
             try {
-                // 1. Create or update the contact
+                if (typeof fbq === 'function') {
+                    fbq('track', 'Lead');
+                }
+            } catch (pixErr) {
+                console.error('Meta Pixel Lead event error:', pixErr);
+            }
+
+            // 2. GTM lead event tracking
+            try {
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({
+                    'event': 'lead',
+                    'lead_email': email,
+                    'lead_name': nome,
+                    'lead_phone': telefone,
+                    'formacao': formacao,
+                    'L01ACAODEVITALICIO_UTM_SOURCE': utmSourceVal,
+                    'L01ACAODEVITALICIO_UTM_MEDIUM': utmMediumVal,
+                    'L01ACAODEVITALICIO_UTM_CAMPAIGN': utmCampaignVal,
+                    'L01ACAODEVITALICIO_UTM_CONTENT': utmContentVal,
+                    'L01ACAODEVITALICIO_UTM_TERM': utmTermVal
+                });
+            } catch (gtmErr) {
+                console.error('GTM Lead event error:', gtmErr);
+            }
+
+            try {
+                // 3. Create or update the contact in ActiveCampaign
                 const contactId = await upsertContact(nome, email, telefone, utms, formacao);
 
                 if (contactId) {
-                    // 2. Get or create the tag
+                    // 4. Get or create the tag
                     const tagId = await getOrCreateTagId(AC_TAG_NAME);
-                    // 3. Apply tag to contact
+                    // 5. Apply tag to contact
                     await applyTagToContact(contactId, tagId);
                 }
             } catch (err) {
@@ -230,9 +331,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Fail silently: still redirect the user
             }
 
+            // Build Tally redirection URL passing the UTM values
+            const queryParams = new URLSearchParams();
+            if (utmSourceVal) queryParams.set('L01ACAODEVITALICIO_UTM_SOURCE', utmSourceVal);
+            if (utmMediumVal) queryParams.set('L01ACAODEVITALICIO_UTM_MEDIUM', utmMediumVal);
+            if (utmCampaignVal) queryParams.set('L01ACAODEVITALICIO_UTM_CAMPAIGN', utmCampaignVal);
+            if (utmContentVal) queryParams.set('L01ACAODEVITALICIO_UTM_CONTENT', utmContentVal);
+            if (utmTermVal) queryParams.set('L01ACAODEVITALICIO_UTM_TERM', utmTermVal);
+
+            // Also send standard UTMs as fallback
+            if (utmSourceVal) queryParams.set('utm_source', utmSourceVal);
+            if (utmMediumVal) queryParams.set('utm_medium', utmMediumVal);
+            if (utmCampaignVal) queryParams.set('utm_campaign', utmCampaignVal);
+            if (utmContentVal) queryParams.set('utm_content', utmContentVal);
+            if (utmTermVal) queryParams.set('utm_term', utmTermVal);
+
+            // Populate form fields to prevent duplicate input
+            queryParams.set('nome', nome);
+            queryParams.set('email', email);
+            queryParams.set('telefone', telefone);
+            if (formacao) queryParams.set('formacao', formacao);
+
+            const finalRedirectUrl = `${TALLY_REDIRECT}?${queryParams.toString()}`;
+
             // Always redirect to Tally after attempting AC sync
             btn.textContent = 'Redirecionando...';
-            window.location.href = TALLY_REDIRECT;
+            window.location.href = finalRedirectUrl;
         });
     }
 
