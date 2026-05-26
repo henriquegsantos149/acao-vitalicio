@@ -427,7 +427,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Audience Section */
 .target-audience {
-    padding: 8rem 0;
+    padding: 9rem 0;
     position: relative;
     z-index: 10;
 }
@@ -468,7 +468,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Context/Method Section */
 .method-section {
-    padding: 6rem 0;
+    padding: 9rem 0;
     position: relative;
     z-index: 10;
 }
@@ -543,7 +543,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Instructor Section */
 .instructor-section {
-    padding: 6rem 0;
+    padding: 9rem 0;
     position: relative;
     z-index: 10;
 }
@@ -582,7 +582,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Guarantee Section */
 .guarantee-section {
-    padding: 6rem 0;
+    padding: 9rem 0;
     position: relative;
     z-index: 10;
 }
@@ -753,7 +753,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Testimonials Carousel Section */
 .testimonials-section {
-    padding: 6rem 0;
+    padding: 9rem 0;
     position: relative;
     z-index: 10;
     background-color: var(--primary-dark);
@@ -879,7 +879,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* FAQ Section */
 .faq-section {
-    padding: 6rem 0;
+    padding: 9rem 0;
 }
 
 .faq-accordion {
@@ -1067,7 +1067,7 @@ h1, h2, h3, h4, h5, h6 {
     .hero { padding: 8rem 0 4rem; }
     .target-audience, .method-section, .instructor-section, 
     .guarantee-section, .pricing-preview, .testimonials-section, .faq-section {
-        padding: 4rem 0;
+        padding: 6rem 0;
     }
 }
 
@@ -1150,7 +1150,7 @@ h1, h2, h3, h4, h5, h6 {
     .hero { padding: 6rem 0 3rem; }
     .target-audience, .method-section, .instructor-section, 
     .guarantee-section, .pricing-preview, .testimonials-section, .faq-section {
-        padding: 3rem 0;
+        padding: 4rem 0;
     }
     
     .hero-title { font-size: 1.8rem; }
