@@ -97,32 +97,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Email format validation regex
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    // Real-time phone input masking & character limiting (max 11 digits / 15 chars formatted)
+    // Real-time phone input masking & character limiting (max 11 digits)
     const phoneInput = document.getElementById('telefone');
     if (phoneInput) {
-        phoneInput.setAttribute('maxlength', '15');
+        phoneInput.setAttribute('maxlength', '11');
         phoneInput.addEventListener('input', function (e) {
             let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
             if (value.length > 11) {
                 value = value.slice(0, 11);
             }
-            
-            // Format phone number dynamically: (XX) XXXXX-XXXX or (XX) XXXX-XXXX
-            if (value.length > 6) {
-                const isNineDigit = value.length > 10;
-                const ddd = value.slice(0, 2);
-                const part1 = value.slice(2, isNineDigit ? 7 : 6);
-                const part2 = value.slice(isNineDigit ? 7 : 6);
-                e.target.value = `(${ddd}) ${part1}-${part2}`;
-            } else if (value.length > 2) {
-                const ddd = value.slice(0, 2);
-                const part1 = value.slice(2);
-                e.target.value = `(${ddd}) ${part1}`;
-            } else if (value.length > 0) {
-                e.target.value = `(${value}`;
-            } else {
-                e.target.value = '';
-            }
+            e.target.value = value;
             
             // Remove invalid style if complete or empty
             if (value.length >= 10 || value.length === 0) {
