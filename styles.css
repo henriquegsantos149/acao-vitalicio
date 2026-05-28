@@ -203,8 +203,8 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--light-gray);
     text-decoration: none;
     font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 0.85rem;
+    font-weight: 400;
+    font-size: 0.78rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: color 0.3s ease;
@@ -232,10 +232,10 @@ h1, h2, h3, h4, h5, h6 {
     background: transparent;
     color: var(--green-1);
     border: 1px solid var(--green-1);
-    padding: 0.5rem 1.5rem;
+    padding: 0.45rem 1.25rem;
     font-family: var(--font-primary);
     font-weight: 700;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     text-decoration: none;
     transition: all 0.3s ease;
     animation: nav-cta-glow 2s ease-in-out infinite;
