@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // Clean hash on page load if present
+    if (window.location.hash) {
+        window.history.replaceState("", document.title, window.location.pathname + window.location.search);
+    }
+
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -14,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     behavior: 'smooth',
                     block: 'start'
                 });
+                
+                // Prevent anchor hash from showing up in the URL bar
+                window.history.pushState("", document.title, window.location.pathname + window.location.search);
             }
         });
     });
