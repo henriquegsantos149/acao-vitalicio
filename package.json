@@ -1,6 +1,7 @@
 {
   "name": "acao-vitalicio",
   "version": "1.0.0",
+  "type": "module",
   "description": "Landing page Acesso Vitalício PAP",
   "scripts": {
     "dev": "vite",
