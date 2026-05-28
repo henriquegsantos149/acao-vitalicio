@@ -146,7 +146,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .bg-light .instructor-name {
-    color: var(--green-1);
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
 }
 
 .bg-light .price-card {
@@ -589,13 +593,21 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .instructor-name {
-    font-size: 2.2rem;
-    color: var(--green-1);
+    font-size: 3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
     margin-bottom: 1.5rem;
+    letter-spacing: 1px;
 }
 
 .instructor-content .text-content p {
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     line-height: 1.8;
     color: #a0a4a0;
     margin-bottom: 1.2rem;
@@ -603,7 +615,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .instructor-image {
     width: 100%;
-    height: 500px;
+    height: 560px;
     overflow: hidden;
     border: 2px solid rgba(49, 168, 168, 0.3);
 }
@@ -1127,6 +1139,15 @@ h1, h2, h3, h4, h5, h6 {
     
     .hero-title {
         font-size: 2.2rem;
+    }
+    
+    .instructor-name {
+        font-size: 2.2rem;
+    }
+    
+    .instructor-content .text-content p {
+        font-size: 1.15rem;
+        line-height: 1.7;
     }
     
     .hero-subtitle {
