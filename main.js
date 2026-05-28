@@ -309,6 +309,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 if (typeof fbq === 'function') {
                     fbq('track', 'Lead');
+                    if (formado === 'sim') {
+                        fbq('trackCustom', 'lead_qualificado');
+                    }
                 }
             } catch (pixErr) {
                 console.error('Meta Pixel Lead event error:', pixErr);
