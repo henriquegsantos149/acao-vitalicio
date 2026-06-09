@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         currentEmentaPage = page;
-        ementaImg.src = `/Ementa/${currentEmentaPage}.png`;
+        ementaImg.src = `/Ementa/${currentEmentaPage}.webp`;
         ementaIndicator.textContent = `${currentEmentaPage} / ${totalEmentaPages}`;
     }
 
